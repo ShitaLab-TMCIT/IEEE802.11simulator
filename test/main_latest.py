@@ -50,3 +50,28 @@ class User:
     def reset_slots(self):
         self.n = 0
         self.slots = self.calc_slots()
+
+def create_users(num_users, seed=None):
+    return [User(id=i, seed=seed) for i in range(num_users)]
+
+def trans_time(data, rate):
+    return data / rate
+
+def calc_cw_time(slots, mode):
+    return slots * trans_mode[mode]['SLOT_TIME'] * 10**(-6)
+
+def simulate_transmission(users: User, duration: int, rate, print_mode, trans_mode):
+    current_time = 0
+    collision_count = 0
+    transed_data = 0
+    trans_rate = rate * 10**6
+    n = 0
+    
+    while current_time < duration:
+        cw_time = [(user.id, user.slots) for user in users]
+        cw_time.sort(key=lambda x: x[1])
+        
+        current_time = duration
+
+if __name__ == "__main__":
+    n=3
