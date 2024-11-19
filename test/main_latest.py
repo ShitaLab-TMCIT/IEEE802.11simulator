@@ -26,6 +26,17 @@ trans_mode = {
     }
 }
 
+ACK_TIME = {
+    6 : 44,
+    9 : 36,
+    12 : 32,
+    18 : 28,
+    24 : 28,
+    36 : 24,
+    48 : 24,
+    54 : 24
+}
+
 
 class User:
     def __init__(self, id, n=0, seed=None):
@@ -33,22 +44,22 @@ class User:
         #     random.seed(seed+id)
 
         self.id = id
-        self.n = n
+        self.num_re_trans = n
         self.slots = self.calc_slots()
         self.num_transmitted = 0
-        self.total_data_transmitted = 0
+        self.data_transmitted = 0
 
     def calc_slots(self):
-        cw_max = 2 ** (4 + self.n) - 1
+        cw_max = 2 ** (4 + self.num_re_trans) - 1
         self.slots = random.randint(1, min(cw_max, 1023))
         return self.slots
 
     def re_transmit(self):
-        self.n += 1
+        self.num_re_trans += 1
         self.slots = self.calc_slots()
 
     def reset_slots(self):
-        self.n = 0
+        self.num_re_trans = 0
         self.slots = self.calc_slots()
 
 
@@ -71,14 +82,15 @@ def calc_ifs_time(ifs, mode):
 def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     current_time = 0
     collision_count = 0
-    transe_data = 1500 * 8
-    trans_rate = rate * 10**6
-    n = 0
+    trans_data = 1500 * 8
+    total_data_transmitted = 0
+    trans_num = 0
 
-    cw_time = [(user.id, user.slots) for user in users]
+    cw_time_list = [(user.id, user.slots) for user in users]
+    # print(cw_time_list)
 
     while current_time < duration:
-        cw_time.sort(key=lambda x: x[1])
+        cw_time_list.sort(key=lambda x: x[1])
 
         min_user = min(users, key=lambda u: u.slots)
         collisions = sorted(
@@ -90,13 +102,14 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
         collisions_ids = [user.id for user in collisions]
 
 
-        print(cw_time)
-        print('collisions_ids: ', collisions_ids)
+        # print(cw_time_list)
+        # print('collisions_ids: ', collisions_ids)
 
-        trans_time = calc_trans_time(transe_data, rate)
+        trans_time = calc_trans_time(trans_data, rate)
         cw_time = calc_cw_time(min_user.slots, mode)
+        min_slots = min_user.slots
 
-        print('trans_time: ', trans_time, 'cw_time: ', cw_time)
+        # print('trans_time: ', trans_time, 'cw_time: ', cw_time, 'min_user_slots', min_slots)
         # 衝突
         if collisions_ids:
             collision_count += 1
@@ -104,7 +117,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
             if (current_time + cw_time + trans_time + calc_ifs_time('DIFS', mode)) < duration:
                 current_time += cw_time + trans_time + calc_ifs_time('DIFS', mode)
-                print(current_time)
+                # print(current_time)
                 
                 if output_mode in [print_mode[0], print_mode[1]]:
                     
@@ -112,30 +125,68 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
                     
                     for user in collisions:
                         print(f"User {user.id} waited {user.slots} slots before collision.")
+
             
-            for user in users:
-                if user in collisions:
-                    user.re_transmit()
+                for user in users:
+                    if user in collisions:
+                        user.re_transmit()
+                    
+                    else:
+                        user.slots -= min_slots
                 
-                else:
-                    user.slots -= min_user.slots
-            
-            for user in users:
-                print(user.id)
-                print(user.n)
-                print(user.slots)
+                
+                # print([(user.id, user.num_re_trans, user.slots) for user in users])
             
             # 超えるなら終了
             else:
                 current_time = duration
-                        
-                        
+        
+        # 成功
+        else:
+            trans_num += 1
+            min_user.num_transmitted  += 1
+            
+            # 送信時間が制限時間を超えないなら
+            if (current_time + cw_time + trans_time) < duration:
+                current_time += cw_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)
+                min_user.data_transmitted += trans_data
+                total_data_transmitted += trans_data
+                
+            # 超えるなら
+            else:
+                current_time = duration
+                remaining_time = duration - current_time - cw_time
+                transmitted_data = remaining_time * rate * 10**6
 
-        current_time = duration
+                total_data_transmitted += transmitted_data
+                min_user.data_transmitted = transmitted_data
+
+            if output_mode == print_mode[1]:
+                print(f"\nTime: {current_time}s - User {min_user.id} transmitted successfully with CW = {cw_time:.6f} seconds (waited {min_user.slots} slots)")
+
+                for user in users:
+                    print(f'User {user.id} , waited {user.slots} slots')
+
+            for user in users:
+                if user.id == min_user.id:
+                    user.reset_slots()
+                
+                else:
+                    user.slots -= min_slots
+
+            print([(user.id, user.num_re_trans, user.slots) for user in users])
+        # current_time = duration
+
+    print("\nSimulation ended. Results:")
+    for user in users:
+        average_transmission_rate = user.data_transmitted / duration / 10**6
+        print(f"User {user.id} transmitted {user.num_transmitted} times, total data transmitted: {user.data_transmitted} bits, average transmission rate: {average_transmission_rate:.3f} Mbps")
+    
+    print('Total rate : ' ,total_data_transmitted / duration / 10**6)
 
 
 if __name__ == "__main__":
-    n = 30
+    n = 40
 
     users = create_users(n)
-    simulate_transmission(users, 1, 24, output_mode=print_mode[1], mode='g')
+    simulate_transmission(users, 60, 24, output_mode=print_mode[2], mode='g')
