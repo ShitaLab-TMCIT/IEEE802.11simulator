@@ -97,9 +97,11 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
         cw_time = calc_cw_time(min_user.slots, mode)
 
         print('trans_time: ', trans_time, 'cw_time: ', cw_time)
+        # 衝突
         if collisions_ids:
             collision_count += 1
 
+            # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
             if (current_time + cw_time + trans_time + calc_ifs_time('DIFS', mode)) < duration:
                 current_time += cw_time + trans_time + calc_ifs_time('DIFS', mode)
                 print(current_time)
@@ -118,6 +120,12 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
                 else:
                     user.slots -= min_user.slots
             
+            for user in users:
+                print(user.id)
+                print(user.n)
+                print(user.slots)
+            
+            # 超えるなら終了
             else:
                 current_time = duration
                         
