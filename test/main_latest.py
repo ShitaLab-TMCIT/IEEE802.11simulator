@@ -86,6 +86,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     total_data_transmitted = 0
     trans_num = 0
 
+    preamble_time = 20 / (10**6)
+
     cw_time_list = [(user.id, user.slots) for user in users]
     # print(cw_time_list)
 
@@ -115,8 +117,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             collision_count += 1
 
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
-            if (current_time + cw_time + trans_time + calc_ifs_time('DIFS', mode)) < duration:
-                current_time += cw_time + trans_time + calc_ifs_time('DIFS', mode)
+            if (current_time + cw_time + preamble_time + trans_time + calc_ifs_time('DIFS', mode)) < duration:
+                current_time += cw_time + trans_time + calc_ifs_time('DIFS', mode) + preamble_time + (6 * 10**(-6))
                 # print(current_time)
                 
                 if output_mode in [print_mode[0], print_mode[1]]:
@@ -147,8 +149,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             min_user.num_transmitted  += 1
             
             # 送信時間が制限時間を超えないなら
-            if (current_time + cw_time + trans_time) < duration:
-                current_time += cw_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)
+            if (current_time + cw_time + preamble_time + trans_time) < duration:
+                current_time += cw_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode) + preamble_time + (6 * 10**(-6))
                 min_user.data_transmitted += trans_data
                 total_data_transmitted += trans_data
                 
@@ -177,9 +179,9 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             # print([(user.id, user.num_re_trans, user.slots) for user in users])
 
     print("\nSimulation ended. Results:")
-    for user in users:
-        average_transmission_rate = user.data_transmitted / duration / 10**6
-        print(f"User {user.id} transmitted {user.num_transmitted} times, total data transmitted: {user.data_transmitted} bits, average transmission rate: {average_transmission_rate:.3f} Mbps")
+    # for user in users:
+    #     average_transmission_rate = user.data_transmitted / duration / 10**6
+    #     print(f"User {user.id} transmitted {user.num_transmitted} times, total data transmitted: {user.data_transmitted} bits, average transmission rate: {average_transmission_rate:.3f} Mbps")
     
     print('Total rate : ', total_data_transmitted / duration / 10**6)
     
