@@ -63,6 +63,12 @@ class User:
         self.slots = self.calc_slots()
 
 
+class Packet:
+    def __init__(self, mode, rate):
+        # byte, octet数
+        self.trans_data = 1500 
+
+
 def create_users(num_users, seed=None):
     return [User(id=i, seed=seed) for i in range(num_users)]
 
