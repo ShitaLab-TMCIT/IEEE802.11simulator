@@ -1,12 +1,13 @@
 import random
+import math
 
-print_mode = {
+PRINT_MODE = {
     0: "Only Collision",
     1: "ALL",
     2: "No Output"
 }
 
-trans_mode = {
+TRANS_MODE = {
     "a": {
         "SLOT_TIME": 9,
         "SIFS": 16,
@@ -37,6 +38,17 @@ ACK_TIME = {
     54 : 24
 }
 
+OFDM_DATA_BIT = {
+    6 : 24,
+    9 : 35,
+    12 : 48,
+    18 : 72,
+    24 : 96,
+    36 : 144,
+    48 : 192,
+    54 : 216
+}
+
 
 class User:
     def __init__(self, id, n=0, seed=None):
@@ -64,9 +76,8 @@ class User:
 
 
 class Packet:
-    def __init__(self, mode, rate):
-        # byte, octet数
-        self.trans_data = 1500 
+    def __init__(self, mode, rate, level):
+        self.PLCP_preamble = 16
 
 
 def create_users(num_users, seed=None):
@@ -78,11 +89,11 @@ def calc_trans_time(data, rate):
 
 
 def calc_cw_time(slots, mode):
-    return slots * trans_mode[mode]['SLOT_TIME'] * 10**(-6)
+    return slots * TRANS_MODE[mode]['SLOT_TIME'] * 10**(-6)
 
 
 def calc_ifs_time(ifs, mode):
-    return trans_mode[mode][ifs] * 10**(-6)
+    return TRANS_MODE[mode][ifs] * 10**(-6)
 
 
 def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
@@ -127,7 +138,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
                 current_time += cw_time + trans_time + calc_ifs_time('DIFS', mode) + preamble_time + (6 * 10**(-6))
                 # print(current_time)
                 
-                if output_mode in [print_mode[0], print_mode[1]]:
+                if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
                     
                     print(f"\nTime: {current_time}s - Collision detected! Users: {collisions_ids}")
                     
@@ -169,7 +180,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
                 total_data_transmitted += transmitted_data
                 min_user.data_transmitted = transmitted_data
 
-            if output_mode == print_mode[1]:
+            if output_mode == PRINT_MODE[1]:
                 print(f"\nTime: {current_time}s - User {min_user.id} transmitted successfully with CW = {cw_time:.6f} seconds (waited {min_user.slots} slots)")
 
                 for user in users:
@@ -198,4 +209,4 @@ if __name__ == "__main__":
     n = 40
 
     users = create_users(n)
-    simulate_transmission(users, 60, 24, output_mode=print_mode[2], mode='g')
+    simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='g')
