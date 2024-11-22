@@ -124,6 +124,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
         # print(cw_time_list)
         # print('collisions_ids: ', collisions_ids)
 
+        backoff_time = calc_ifs_time('DIFS', mode) + (15 * TRANS_MODE[mode]['SLOT_TIME'] / 2) * 10**(-6)
         trans_time = calc_trans_time(trans_data, rate)
         cw_time = calc_cw_time(min_user.slots, mode)
         min_slots = min_user.slots
@@ -134,8 +135,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             collision_count += 1
 
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
-            if (current_time + cw_time + preamble_time + trans_time + calc_ifs_time('DIFS', mode)) < duration:
-                current_time += cw_time + trans_time + calc_ifs_time('DIFS', mode) + preamble_time + (6 * 10**(-6))
+            if (current_time + cw_time + preamble_time + trans_time + backoff_time) < duration:
+                current_time += cw_time + preamble_time + trans_time + backoff_time
                 # print(current_time)
                 
                 if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
@@ -166,8 +167,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             min_user.num_transmitted  += 1
             
             # 送信時間が制限時間を超えないなら
-            if (current_time + cw_time + preamble_time + trans_time) < duration:
-                current_time += cw_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode) + preamble_time + (6 * 10**(-6))
+            if (current_time + cw_time + preamble_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)) < duration:
+                current_time += cw_time + preamble_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)
                 min_user.data_transmitted += trans_data
                 total_data_transmitted += trans_data
                 
@@ -209,4 +210,4 @@ if __name__ == "__main__":
     n = 40
 
     users = create_users(n)
-    simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='g')
+    simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='a')
