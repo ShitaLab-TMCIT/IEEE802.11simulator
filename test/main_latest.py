@@ -4,7 +4,8 @@ import math
 PRINT_MODE = {
     0: "Only Collision",
     1: "ALL",
-    2: "No Output"
+    2: "Only Results",
+    3: "No Output"
 }
 
 TRANS_MODE = {
@@ -196,12 +197,13 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
 
             # print([(user.id, user.num_re_trans, user.slots) for user in users])
 
-    print("\nSimulation ended. Results:")
     # for user in users:
     #     average_transmission_rate = user.data_transmitted / duration / 10**6
     #     print(f"User {user.id} transmitted {user.num_transmitted} times, total data transmitted: {user.data_transmitted} bits, average transmission rate: {average_transmission_rate:.3f} Mbps")
     
-    print('Total rate : ', total_data_transmitted / duration / 10**6)
+    if output_mode != PRINT_MODE[3]:
+        print("\nSimulation ended. Results:")
+        print('Total rate : ', total_data_transmitted / duration / 10**6)
     
     return total_data_transmitted
 
