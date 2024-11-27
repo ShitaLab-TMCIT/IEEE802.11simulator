@@ -29,25 +29,25 @@ TRANS_MODE = {
 }
 
 ACK_TIME = {
-    6 : 44,
-    9 : 36,
-    12 : 32,
-    18 : 28,
-    24 : 28,
-    36 : 24,
-    48 : 24,
-    54 : 24
+    6: 44,
+    9: 36,
+    12: 32,
+    18: 28,
+    24: 28,
+    36: 24,
+    48: 24,
+    54: 24
 }
 
 OFDM_DATA_BIT = {
-    6 : 24,
-    9 : 35,
-    12 : 48,
-    18 : 72,
-    24 : 96,
-    36 : 144,
-    48 : 192,
-    54 : 216
+    6: 24,
+    9: 35,
+    12: 48,
+    18: 72,
+    24: 96,
+    36: 144,
+    48: 192,
+    54: 216
 }
 
 
@@ -80,7 +80,6 @@ class Packet:
     def __init__(self, mode, rate, level):
         self.PLCP_preamble = 16
 
-
 def create_users(num_users, seed=None):
     return [User(id=i, seed=seed) for i in range(num_users)]
 
@@ -100,7 +99,8 @@ def calc_ifs_time(ifs, mode):
 def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     current_time = 0
     collision_count = 0
-    trans_data = 1500 * 8
+    trans_data = 1472 * 8 # UDP
+    # trans_data = 1500 * 8 # IP
     total_data_transmitted = 0
     trans_num = 0
 
@@ -113,19 +113,18 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
         cw_time_list.sort(key=lambda x: x[1])
 
         min_user = min(users, key=lambda u: u.slots)
-        collisions = sorted(
-            [user for user in users if (user.slots == min_user.slots and user.id != min_user.id)],
-            key=lambda u: u.id
-        )
+        collisions = sorted([user for user in users if (
+            user.slots == min_user.slots and user.id != min_user.id)], key=lambda u: u.id)
         if collisions:
             collisions.append(min_user)
         collisions_ids = [user.id for user in collisions]
 
-
         # print(cw_time_list)
         # print('collisions_ids: ', collisions_ids)
 
-        backoff_time = calc_ifs_time('DIFS', mode) + (15 * TRANS_MODE[mode]['SLOT_TIME'] / 2) * 10**(-6)
+        # nav_time = calc_ifs_time('DIFS', mode) + (15 * TRANS_MODE[mode]['SLOT_TIME'] / 2) * 10**(-6)
+        nav_time = calc_ifs_time(
+            'SIFS', mode) + (ACK_TIME[rate] / 10**(6)) + calc_ifs_time('DIFS', mode)
         trans_time = calc_trans_time(trans_data, rate)
         cw_time = calc_cw_time(min_user.slots, mode)
         min_slots = min_user.slots
@@ -136,43 +135,52 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             collision_count += 1
 
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
-            if (current_time + cw_time + preamble_time + trans_time + backoff_time) < duration:
-                current_time += cw_time + preamble_time + trans_time + backoff_time
+            if (current_time + cw_time + preamble_time +
+                    trans_time + nav_time) < duration:
+                current_time += cw_time + preamble_time + trans_time + nav_time
                 # print(current_time)
-                
-                if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
-                    
-                    print(f"\nTime: {current_time}s - Collision detected! Users: {collisions_ids}")
-                    
-                    for user in collisions:
-                        print(f"User {user.id} waited {user.slots} slots before collision.")
 
-            
+                if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
+
+                    print(
+                        f"\nTime: {current_time}s - Collision detected! Users: {collisions_ids}")
+
+                    for user in collisions:
+                        print(
+                            f"User {user.id} waited {user.slots} slots before collision.")
+
                 for user in users:
                     if user in collisions:
                         user.re_transmit()
-                    
+
                     else:
                         user.slots -= min_slots
-                
-                
+
                 # print([(user.id, user.num_re_trans, user.slots) for user in users])
-            
+
             # 超えるなら終了
             else:
                 current_time = duration
-        
+
         # 成功
         else:
             trans_num += 1
-            min_user.num_transmitted  += 1
-            
+            min_user.num_transmitted += 1
+
             # 送信時間が制限時間を超えないなら
-            if (current_time + cw_time + preamble_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)) < duration:
-                current_time += cw_time + preamble_time + trans_time + calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)
+            if (current_time +
+                cw_time +
+                preamble_time +
+                trans_time +
+                calc_ifs_time('SIFS', mode) +
+                (ACK_TIME[rate] /
+                 10**6) +
+                    calc_ifs_time('DIFS', mode)) < duration:
+                current_time += cw_time + preamble_time + trans_time + \
+                    calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)
                 min_user.data_transmitted += trans_data
                 total_data_transmitted += trans_data
-                
+
             # 超えるなら
             else:
                 current_time = duration
@@ -183,7 +191,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
                 min_user.data_transmitted = transmitted_data
 
             if output_mode == PRINT_MODE[1]:
-                print(f"\nTime: {current_time}s - User {min_user.id} transmitted successfully with CW = {cw_time:.6f} seconds (waited {min_user.slots} slots)")
+                print(
+                    f"\nTime: {current_time}s - User {min_user.id} transmitted successfully with CW = {cw_time:.6f} seconds (waited {min_user.slots} slots)")
 
                 for user in users:
                     print(f'User {user.id} , waited {user.slots} slots')
@@ -191,7 +200,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             for user in users:
                 if user.id == min_user.id:
                     user.reset_slots()
-                
+
                 else:
                     user.slots -= min_slots
 
@@ -200,12 +209,12 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     # for user in users:
     #     average_transmission_rate = user.data_transmitted / duration / 10**6
     #     print(f"User {user.id} transmitted {user.num_transmitted} times, total data transmitted: {user.data_transmitted} bits, average transmission rate: {average_transmission_rate:.3f} Mbps")
-    
+
     if output_mode != PRINT_MODE[3]:
         print("\nSimulation ended. Results:")
         print('Total rate : ', total_data_transmitted / duration / 10**6)
-    
-    return float(total_data_transmitted) / duration / 10**6
+
+    return float(total_data_transmitted / duration / 10**6)
 
 
 if __name__ == "__main__":
