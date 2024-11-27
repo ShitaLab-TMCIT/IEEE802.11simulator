@@ -3,3 +3,4 @@ a.out
 *.drawio.dtmp
 .vscode
 a.exe
+*.pyc
