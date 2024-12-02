@@ -28,16 +28,7 @@ TRANS_MODE = {
     }
 }
 
-ACK_TIME = {
-    6: 44,
-    9: 36,
-    12: 32,
-    18: 28,
-    24: 28,
-    36: 24,
-    48: 24,
-    54: 24
-}
+
 
 OFDM_DATA_BIT = {
     6: 24,
@@ -105,9 +96,16 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     trans_num = 0
 
     preamble_time = 20 / (10**6)
+    FCS_time = 4 * 8 / (rate * 10**6)
+    # ACK_time = 14 * 8 / (rate * 10**6)
+    ACK_time = 20 / 10**6
+    MAC_header_time = 24 * 8 / (rate * 10**6)
 
     cw_time_list = [(user.id, user.slots) for user in users]
     # print(cw_time_list)
+    
+    nav_time = calc_ifs_time('SIFS', mode) + ACK_time + calc_ifs_time('DIFS', mode)
+    trans_time = calc_trans_time(trans_data, rate)
 
     while current_time < duration:
         cw_time_list.sort(key=lambda x: x[1])
@@ -123,9 +121,6 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
         # print('collisions_ids: ', collisions_ids)
 
         # nav_time = calc_ifs_time('DIFS', mode) + (15 * TRANS_MODE[mode]['SLOT_TIME'] / 2) * 10**(-6)
-        nav_time = calc_ifs_time(
-            'SIFS', mode) + (ACK_TIME[rate] / 10**(6)) + calc_ifs_time('DIFS', mode)
-        trans_time = calc_trans_time(trans_data, rate)
         cw_time = calc_cw_time(min_user.slots, mode)
         min_slots = min_user.slots
 
@@ -135,15 +130,13 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             collision_count += 1
 
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
-            if (current_time + cw_time + preamble_time +
-                    trans_time + nav_time) < duration:
-                current_time += cw_time + preamble_time + trans_time + nav_time
+            if (current_time + cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + nav_time) < duration:
+                current_time += cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + nav_time
                 # print(current_time)
 
                 if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
 
-                    print(
-                        f"\nTime: {current_time}s - Collision detected! Users: {collisions_ids}")
+                    print(f"\nTime: {current_time}s - Collision detected! Users: {collisions_ids}")
 
                     for user in collisions:
                         print(
@@ -168,16 +161,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             min_user.num_transmitted += 1
 
             # 送信時間が制限時間を超えないなら
-            if (current_time +
-                cw_time +
-                preamble_time +
-                trans_time +
-                calc_ifs_time('SIFS', mode) +
-                (ACK_TIME[rate] /
-                 10**6) +
-                    calc_ifs_time('DIFS', mode)) < duration:
-                current_time += cw_time + preamble_time + trans_time + \
-                    calc_ifs_time('SIFS', mode) + (ACK_TIME[rate] / 10**6) + calc_ifs_time('DIFS', mode)
+            if (current_time + cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + calc_ifs_time('SIFS', mode) + ACK_time + calc_ifs_time('DIFS', mode)) < duration:
+                current_time += cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + calc_ifs_time('SIFS', mode) + ACK_time + calc_ifs_time('DIFS', mode)
                 min_user.data_transmitted += trans_data
                 total_data_transmitted += trans_data
 
