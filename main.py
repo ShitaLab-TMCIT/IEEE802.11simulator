@@ -169,7 +169,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             # 超えるなら
             else:
                 current_time = duration
-                remaining_time = duration - current_time - cw_time
+                remaining_time = duration -  (cw_time + preamble_time + MAC_header_time)
                 transmitted_data = remaining_time * rate * 10**6
 
                 total_data_transmitted += transmitted_data
