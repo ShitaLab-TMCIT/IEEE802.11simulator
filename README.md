@@ -1,2 +1,2 @@
 # IEEE802.11simulator
-Network simulator for IEEE80.211 (Wi-Fi) using MATLAB
+Network simulator for IEEE802.11 (Wi-Fi) using MATLAB
