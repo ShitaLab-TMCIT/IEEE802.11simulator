@@ -3,5 +3,4 @@ a.out
 *.drawio.dtmp
 .vscode
 a.exe
-.DS_Store
-*.asv
+*.pyc
