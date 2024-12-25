@@ -4,3 +4,8 @@ a.out
 .vscode
 a.exe
 *.pyc
+manual/*
+*.aux
+*.log
+*.out
+*.synctex.gz
