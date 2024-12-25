@@ -9,7 +9,7 @@ rate = 24  # Mbps
 duration = 60  # seconds
 mode = 'a'  # Transmission mode
 n_values = [1, 10, 20, 30, 40, 50, 60, 70, 80]
-num_simulations = 10  # 各nでのシミュレーション回数
+num_simulations = 10000  # 各nでのシミュレーション回数
 max_processes = 10  # 同時に動作するプロセスの上限
 
 # ロックと共有オブジェクトの初期化
@@ -70,7 +70,9 @@ if __name__ == '__main__':
 
         # DataFrameの作成と保存
         df_results = pd.DataFrame(np.array(results), columns=n_values)
+        print(df_results[80].mean())
         
         if df_results[80].mean() < pre:
             pre = df_results[80].mean()
+            print(pre)
             df_results.to_csv('./out/out.csv', index=False)
