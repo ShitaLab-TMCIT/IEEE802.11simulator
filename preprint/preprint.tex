@@ -16,6 +16,7 @@
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage[english, japanese]{babel}
 \usepackage{multicol} % 二段組用パッケージ
@@ -24,6 +25,7 @@
 \usepackage{authblk} % 著者・所属パッケージ
 \usepackage{here}
 \usepackage{caption}
+
 \setmainfont[Ligatures=TeX]{Times New Roman}
 \setmainjfont[BoldFont=MS Gothic]{MS Mincho}
 
@@ -35,14 +37,23 @@
   {\thesection.}
   {1em}{}
 
+\titleformat{\subsection}
+  {\fontsize{10pt}{10pt}}
+  {\thesubsection}
+  {1em}{}
 
-\setlength{\parindent}{1em}
+\titleformat{\subsubsection}
+  {\fontsize{10pt}{10pt}}
+  {\thesubsubsection}
+  {1em}{}
+
+  \setlength{\parindent}{1em}
 % \setlength{\belowcaptionskip}{1em} % キャプション下の余白を -10pt に設定
 
 
 
 \titlespacing*{\section}{0em}{1em}{0em}
-
+\titlespacing*{\subsection}{0em}{1em}{0em}
 
 \pagestyle{empty}
 
@@ -75,17 +86,46 @@
 ]
 
 \section{緒言}
-近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており、今後も利用の増加と発展が見込まれている.
+近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており,今後も利用の増加と発展が見込まれている.
 
 
 \section{提案手法}
+
+\subsection{CSMA/CA}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{./assets/csmaca-1.png}
+\end{figure}
+
+\subsubsection{CW(Contention Window)}
+
+再送回数を$n$とするとCWの最大値は
+
+\begin{align}
+  \text{cw\_max} &= 2^{4 + n} - 1
+\end{align}
+
+となり,スロット数は
+
+\begin{align}
+  \text{slots} &= \mathrm{randomint}(1, \; \min(\text{cw\_max}, \; 1023))
+\end{align}
+
+で定義される.
+
+
+\subsection{パケット構成}
+
+% 必要だったら
+\subsection{User class}
 
 
 \section{結果}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\columnwidth]{./assets/graph.png}
+  \includegraphics[width=0.9\columnwidth]{./assets/graph.png}
 \end{figure}
 
 \section{結言}
