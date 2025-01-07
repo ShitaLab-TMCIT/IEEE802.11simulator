@@ -9,3 +9,4 @@ manual/*
 *.log
 *.out
 *.synctex.gz
+preprint/out/*
