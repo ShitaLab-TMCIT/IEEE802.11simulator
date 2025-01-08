@@ -26,8 +26,8 @@
 \usepackage{here}
 \usepackage{caption}
 
-\setmainfont[Ligatures=TeX]{Times New Roman}
-\setmainjfont[BoldFont=MS Gothic]{MS Mincho}
+% \setmainfont[Ligatures=TeX]{Times New Roman}
+% \setmainjfont[BoldFont=MS Gothic]{MS Mincho}
 
 \renewcommand{\baselinestretch}{0.95}
 
@@ -70,12 +70,12 @@
 
         {\fontsize{15pt}{15pt}\selectfont{クロスレイヤシミュレータ開発における無線LANシミュレータの開発}}
 
-        {\vspace{1.5em}}
+        {\vspace{1.3em}}
 
-        {\fontsize{13pt}{13pt}\selectfont{ Development of a CSMA/CA Simulator in the Context of an Integrated Simulator Spanning from the Physical Layer to the MAC Layer }}
+        {\fontsize{13pt}{13pt}\selectfont{Development of a Wireless LAN Simulator for Cross-Layer Simulator Development }}
     \end{center}
 
-
+    \vspace{0.1em}
 
     \begin{flushright}
       {\fontsize{11pt}{11pt}\selectfont{T5-16　下沢亮太郎\\}}
@@ -88,7 +88,7 @@
 ]
 
 \section{緒言}
-近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており,今後も利用の増加と発展が見込まれている.
+近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており,今後も利用の増加と発展が見込まれている.近年の無線通信技術の進歩により,システムの高機能化・複雑化が進む一方でレイヤごとに独立した性能評価が通信全体の評価を妨げるケースが増加しており,通信全体をクロスレイヤで評価できる計算機シミュレータの開発が求められている.そこで,本研究ではクロスレイヤシミュレータにおける無線LAN通信
 
 
 \section{提案手法}
@@ -97,7 +97,8 @@
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\columnwidth]{./assets/csmaca-1.png}
+  \includegraphics[width=1\columnwidth]{./assets/csmaca-1.png}
+  \caption{CSMA/CA概要}
 \end{figure}
 
 \subsubsection{CW(Contention Window)}
@@ -111,26 +112,36 @@
 となり,スロット数は
 
 \begin{align}
-  \text{slots} &= \mathrm{randomint}(1, \; \min(\text{cw\_max}, \; 1023))
+  \text{slots} &= \mathrm{randint}(1, \; \min(\text{cw\_max}, \; 1023))
 \end{align}
 
 で定義される.
 
 
-\subsection{パケット構成}
+\subsection{パケット構成モデル化}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\columnwidth]{./assets/packet.drawio.png}
+  \caption{モデル化されたパケット構成図}
+\end{figure}
 
-% 必要だったら
-\subsection{User class}
+
+\subsection{User class(必要だったら)}
 
 
 \section{結果}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.9\columnwidth]{./assets/graph.png}
+  \includegraphics[width=1\columnwidth]{./assets/graph.png}
+  \caption{シミュレーション結果}
 \end{figure}
 
 \section{結言}
+
+\begin{thebibliography}{9}
+  \bibitem{midori}インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書 \; 株式会社インプレスコミュニケーションズ
+\end{thebibliography}
 
 
 \end{document}
