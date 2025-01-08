@@ -5,3 +5,9 @@ a.out
 a.exe
 *.pyc
 out/
+manual/*
+*.aux
+*.log
+*.out
+*.synctex.gz
+preprint/out/
