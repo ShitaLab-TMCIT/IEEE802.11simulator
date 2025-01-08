@@ -10,7 +10,7 @@ rate = 24  # Mbps
 duration = 60  # seconds
 mode = 'a'  # Transmission mode
 n_values = [1, 10, 20, 30, 40, 50, 60, 70, 80]
-num_simulations = 500  # 各nでのシミュレーション回数
+num_simulations = 1000  # 各nでのシミュレーション回数
 max_threads = 10  # 同時実行スレッド数の上限
 
 results = []
