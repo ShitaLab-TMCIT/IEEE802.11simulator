@@ -4,3 +4,4 @@ a.out
 .vscode
 a.exe
 *.pyc
+out/
