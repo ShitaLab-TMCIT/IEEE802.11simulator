@@ -95,17 +95,24 @@
 
 \section{提案手法}
 
-\subsection{CSMA/CA}
+\subsection{CSMA/CA(Carrier Sense Multiple Access with Collision Avoidance)}
+無線LANの規格であるIEEE 802.11では,CSMA/CAと呼ばれる方式が採用されている.この方式は,送信前にチャネルが空いているかどうかを確認し,空いている場合に送信を行う方式である.図\ref{CSMA/CA}にCSMA/CAの概要を示す.
+
+CSMA/CAでは,端末は送信チャネルをキャリア感知(Carrier Sense)し，チャネルが空いているタイミングでパケット送信を試みる．もしチャネルが使用中であれば，一定時間バックオフを行う．このとき，各端末はランダムに生成したスロット数に従い待機し，他の端末との衝突を回避する．
+
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\columnwidth]{./assets/csmaca-1.png}
   \caption{CSMA/CA概要}
+  \label{CSMA/CA}
 \end{figure}
 
 \subsubsection{CW(Contention Window)}
+バックオフ時に用いるコンテンションウィンドウ(Contention Window; CW)は，衝突回数や再送制御のパラメータに応じて変化する．再送回数を$n$とするとCWの最大値は
 
-再送回数を$n$とするとCWの最大値は
+
+% 再送回数を$n$とするとCWの最大値は
 
 \begin{align}
   \text{cw\_max} &= 2^{4 + n} - 1
@@ -119,19 +126,24 @@
 
 で定義される.
 
+本研究では,上記の式を用いて,各端末が送信を試みる際の待機時間を動的に変化させる処理を実装した.CSMA/CAによるランダムアクセスは,多数の端末が同時にアクセスしようとする場合でも,一部の端末が優先的にチャネルを占有する状況を回避できる利点を持つ.そのため,大規模な無線LAN環境下での通信効率を左右する重要な仕組みとして知られている.
+
 
 \subsection{パケット構成モデル化}
+
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\columnwidth]{./assets/packet.png}
   \caption{モデル化されたパケット構成図}
+  \label{packet}
 \end{figure}
 
 
 \subsection{User class(必要だったら)}
 
 
-\section{結果}
+\section{結果, 考察}
 図\ref{fig:simulation-result}に,横軸を端末数,縦軸をスループットとし,シミュレーション結果と理論値を併せてプロットしたグラフを示す.
 % 横軸に端末数,縦軸にスループットを取ったグラフを図\ref{fig:simulation-result}に示す.
 
@@ -142,6 +154,7 @@
   \caption{シミュレーション結果}
   \label{fig:simulation-result}
 \end{figure}
+
 
 \section{結言}
 本研究では,クロスレイヤシミュレータの一部である無線LANシミュレータを開発し,CSMA/CAを中心とした動作のモデル化と検証を行った.
