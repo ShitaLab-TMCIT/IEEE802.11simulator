@@ -78,8 +78,8 @@
     \vspace{0.1em}
 
     \begin{flushright}
-      {\fontsize{11pt}{11pt}\selectfont{T5-16　下沢亮太郎\\}}
-      {\fontsize{11pt}{11pt}\selectfont{指導教員　設樂勇}}
+      {\fontsize{11pt}{11pt}\selectfont{T5-16 \; 下沢亮太郎\\}}
+      {\fontsize{11pt}{11pt}\selectfont{指導教員 \; 設樂勇}}
     \end{flushright}
 
     \vspace{1em}
@@ -88,14 +88,16 @@
 ]
 
 \section{緒言}
-近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており,今後も利用の増加と発展が見込まれている.近年の無線通信技術の進歩により,システムの高機能化・複雑化が進む一方でレイヤごとに独立した性能評価が通信全体の評価を妨げるケースが増加しており,通信全体をクロスレイヤで評価できる計算機シミュレータの開発が求められている.そこで,本研究ではクロスレイヤシミュレータにおける無線LAN通信
+近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており,今後も利用の増加と発展が見込まれている.近年の無線通信技術の進歩に伴い,システムが高機能化・複雑化しており,従来のようにレイヤごとに独立した性能評価を行う手法では通信全体の実用的な評価を十分に行うことが困難になりつつある.
+
+そのため,通信全体をクロスレイヤで評価できる計算機シミュレータの開発が求められている.本研究ではクロスレイヤシミュレータにおけるMACレイヤの挙動をシミュレートする機能を開発を行い,その有効性を評価した.
 
 
 \section{提案手法}
 
 \subsection{CSMA/CA}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\columnwidth]{./assets/csmaca-1.png}
   \caption{CSMA/CA概要}
@@ -119,9 +121,9 @@
 
 
 \subsection{パケット構成モデル化}
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\columnwidth]{./assets/packet.drawio.png}
+  \includegraphics[width=1\columnwidth]{./assets/packet.png}
   \caption{モデル化されたパケット構成図}
 \end{figure}
 
@@ -130,18 +132,27 @@
 
 
 \section{結果}
+図\ref{fig:simulation-result}に,横軸を端末数,縦軸をスループットとし,シミュレーション結果と理論値を併せてプロットしたグラフを示す.
+% 横軸に端末数,縦軸にスループットを取ったグラフを図\ref{fig:simulation-result}に示す.
 
-\begin{figure}[h]
+
+\begin{figure}[H]
   \centering
-  \includegraphics[width=1\columnwidth]{./assets/graph.png}
+  \includegraphics[width=1\columnwidth]{./assets/g3.png}
   \caption{シミュレーション結果}
+  \label{fig:simulation-result}
 \end{figure}
 
 \section{結言}
+本研究では,クロスレイヤシミュレータの一部である無線LANシミュレータを開発し,CSMA/CAを中心とした動作のモデル化と検証を行った.
+
+現在の方法では通信が連続して行われているが,ポアソン分布に従った時間だけ離すことで実際の通信頻度に近い状況を再現することや,各ステーションに距離の概念を持たせて自由空間伝搬による減衰を考慮することが今後の課題である.
 
 \begin{thebibliography}{9}
-  \bibitem{midori}インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書 \; 株式会社インプレスコミュニケーションズ
+  \bibitem{midori}守倉正博, 久保田周治, 『インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書』, 株式会社インプレスコミュニケーションズ, 2016年
+  \bibitem{paper}Y. Morino, T. Hiraguri, H. Yoshino, K. Nishimori, T. Matsuda, ``A Novel Collision Avoidance Scheme Using Optimized Contention Window in Dense Wireless LAN Environments*'' \; \textit{IEICE TRANS. COMMUN.}, VOL.E99-B, NO.11 NOVEMBER 2016
 \end{thebibliography}
+
 
 
 \end{document}
