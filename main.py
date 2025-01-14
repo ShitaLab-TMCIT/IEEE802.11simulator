@@ -130,8 +130,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             collision_count += 1
 
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
-            if (current_time + cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + calc_ifs_time('DIFS', mode)) < duration:
-                current_time += cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + calc_ifs_time('DIFS', mode)
+            if (current_time + cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + nav_time) < duration:
+                current_time += cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + nav_time
 
                 if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
 
