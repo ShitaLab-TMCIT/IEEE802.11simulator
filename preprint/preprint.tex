@@ -25,6 +25,7 @@
 \usepackage{authblk} % 著者・所属パッケージ
 \usepackage{here}
 \usepackage{caption}
+\usepackage{tabularx}
 
 % \setmainfont[Ligatures=TeX]{Times New Roman}
 % \setmainjfont[BoldFont=MS Gothic]{MS Mincho}
@@ -78,7 +79,8 @@
     \vspace{0.1em}
 
     \begin{flushright}
-      {\fontsize{11pt}{11pt}\selectfont{T5-16 \; 下沢亮太郎\\}}
+      {\fontsize{11pt}{11pt}\selectfont{T5-16 \; 下沢亮太郎}}
+      \\
       {\fontsize{11pt}{11pt}\selectfont{指導教員 \; 設樂勇}}
     \end{flushright}
 
@@ -93,12 +95,12 @@
 そのため,通信全体をクロスレイヤで評価できる計算機シミュレータの開発が求められている.本研究ではクロスレイヤシミュレータにおけるMACレイヤの挙動をシミュレートする機能を開発を行い,その有効性を評価した.
 
 
-\section{提案手法}
-
+\section{無線LAN通信の特性}
 \subsection{CSMA/CA(Carrier Sense Multiple Access with Collision Avoidance)}
 無線LANの規格であるIEEE 802.11では,CSMA/CAと呼ばれる方式が採用されている.この方式は,送信前にチャネルが空いているかどうかを確認し,空いている場合に送信を行う方式である.図\ref{CSMA/CA}にCSMA/CAの概要を示す.
 
 CSMA/CAでは,端末は送信チャネルをキャリア感知(Carrier Sense)し，チャネルが空いているタイミングでパケット送信を試みる．もしチャネルが使用中であれば，一定時間バックオフを行う．このとき，各端末はランダムに生成したスロット数に従い待機し，他の端末との衝突を回避する．
+
 
 
 \begin{figure}[H]
@@ -109,7 +111,7 @@ CSMA/CAでは,端末は送信チャネルをキャリア感知(Carrier Sense)し
 \end{figure}
 
 \subsubsection{CW(Contention Window)}
-バックオフ時に用いるコンテンションウィンドウ(Contention Window; CW)は，衝突回数や再送制御のパラメータに応じて変化する．再送回数を$n$とするとCWの最大値は
+バックオフ時に用いるコンテンションウィンドウは，衝突回数や再送制御のパラメータに応じて変化する．再送回数を$n$とするとCWの最大値は
 
 
 % 再送回数を$n$とするとCWの最大値は
@@ -118,19 +120,27 @@ CSMA/CAでは,端末は送信チャネルをキャリア感知(Carrier Sense)し
   \text{cw\_max} &= 2^{4 + n} - 1
 \end{align}
 
-となり,スロット数は
+となり,スロット数$s$は
+
+\begin{align}
+  s &= \mathrm{randint}(1, \; \min(\text{cw\_max}, \; 1023))
+\end{align}
 
 \begin{align}
   \text{slots} &= \mathrm{randint}(1, \; \min(\text{cw\_max}, \; 1023))
 \end{align}
 
+
 で定義される.
 
-本研究では,上記の式を用いて,各端末が送信を試みる際の待機時間を動的に変化させる処理を実装した.CSMA/CAによるランダムアクセスは,多数の端末が同時にアクセスしようとする場合でも,一部の端末が優先的にチャネルを占有する状況を回避できる利点を持つ.そのため,大規模な無線LAN環境下での通信効率を左右する重要な仕組みとして知られている.
+本研究では,上記の式を用いて,各端末が送信を試みる際の待機時間を動的に変化させる処理を実装した.
+
+CSMA/CAによるランダムアクセスは,多数の端末が同時にアクセスしようとする場合でも,一部の端末が優先的にチャネルを占有する状況を回避できる利点を持つ.そのため,大規模な無線LAN環境下での通信効率を左右する重要な仕組みとして知られている.
 
 
 \subsection{パケット構成モデル化}
 
+UDPレベルでの無線LAN通信をシミュレートするために,簡易的にパケットを構成するモデルを作成した.図\ref{packet}に,モデル化されたパケットの構成図を示す.
 
 \begin{figure}[H]
   \centering
@@ -140,13 +150,53 @@ CSMA/CAでは,端末は送信チャネルをキャリア感知(Carrier Sense)し
 \end{figure}
 
 
-\subsection{User class(必要だったら)}
+% \section{提案手法}
+% \subsection{User class}
+
+\section{実装とシミュレーション設定}
+\subsection{Userクラスの設計}
+本研究のシミュレータ実装では、各端末を\texttt{User}クラスとして定義し、端末ごとのバックオフスロットや再送回数などを管理している。表\ref{tab:user-class}に主なメンバ変数と役割をまとめる。
+
+\begin{table}[H]
+  \centering
+  \caption{Userクラスのメンバ変数とメソッドの一覧}
+  \label{tab:user-class}
+  \begin{tabularx}{\columnwidth}{lX}
+    \hline
+    \textbf{名称} & \textbf{説明} \\
+    \hline
+    \multicolumn{2}{l}{\textbf{メンバ変数}} \\[2pt]
+    \hline
+    \texttt{id} & 端末を一意に識別するためのID。 \\
+    \texttt{num\_re\_trans} & 再送回数。衝突や失敗時に加算され、\newline
+                             次回の\texttt{slots}計算にも影響を与える。 \\
+    \texttt{slots} & バックオフに使用するスロット数。 \newline
+                    \texttt{calc\_slots()}メソッドにより動的に算出。 \\
+    \texttt{num\_transmitted} & 送信成功回数。シミュレーションで\newline
+                               送信に成功するたびに加算される。 \\
+    \texttt{data\_transmitted} & 送信したデータ量（bit）。\newline
+                                スループット計算の基礎となる。 \\
+    \hline
+    \multicolumn{2}{l}{\textbf{主なメソッド}} \\[2pt]
+    \hline
+    \texttt{calc\_slots()} & コンテンションウィンドウ最大値 \newline
+                            (\texttt{cw\_max} = $2^{4+n} - 1$) を算出し、\newline
+                            その範囲でランダムに\texttt{slots}を決定。 \\
+    \texttt{re\_transmit()} & 衝突時などに呼び出され、\texttt{num\_re\_trans}を1増やした上で、\newline
+                             \texttt{calc\_slots()}を用いて\texttt{slots}を再計算。 \\
+    \texttt{reset\_slots()} & 送信成功時などに\texttt{num\_re\_trans}を0にリセットし、\newline
+                             新たに\texttt{slots}を割り当てる。 \\
+    \hline
+  \end{tabularx}
+\end{table}
+
 
 
 \section{結果, 考察}
 図\ref{fig:simulation-result}に,横軸を端末数,縦軸をスループットとし,シミュレーション結果と理論値を併せてプロットしたグラフを示す.
 % 横軸に端末数,縦軸にスループットを取ったグラフを図\ref{fig:simulation-result}に示す.
 
+端末数がが増加するにつれて理論値との差が大きくなるが,それは参考にした論文\cite{paper}とのモデル化した時の差によるものだと考える.
 
 \begin{figure}[H]
   \centering
