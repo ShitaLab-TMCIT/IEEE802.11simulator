@@ -8,6 +8,8 @@ def run_simulation():
   try:
     data = request.json
     
+    print(data) # debug
+    
     num_users = int(data.get("num_users",40))
     duration = int(data.get("duration", 60))
     rate = int(data.get("rate", 24))
