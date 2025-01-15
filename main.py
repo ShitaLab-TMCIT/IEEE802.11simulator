@@ -98,7 +98,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     preamble_time = 20 / (10**6)
     FCS_time = 4 * 8 / (rate * 10**6)
     # ACK_time = 14 * 8 / (rate * 10**6)
-    ACK_time = 20 / 10**6
+    ACK_time = 28 / 10**6
     MAC_header_time = 24 * 8 / (rate * 10**6)
 
     cw_time_list = [(user.id, user.slots) for user in users]

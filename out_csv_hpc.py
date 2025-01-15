@@ -9,7 +9,7 @@ rate = 24  # Mbps
 duration = 60  # seconds
 mode = 'a'  # Transmission mode
 n_values = [1, 10, 20, 30, 40, 50, 60, 70, 80]
-num_simulations = 1000  # 各nでのシミュレーション回数
+num_simulations = 500  # 各nでのシミュレーション回数
 max_processes = 10  # 同時に動作するプロセスの上限
 
 # ロックと共有オブジェクトの初期化
