@@ -4,10 +4,10 @@ a.out
 .vscode
 a.exe
 *.pyc
-out/
+
 manual/*
 *.aux
 *.log
 *.out
 *.synctex.gz
-preprint/out/
+out.csv
