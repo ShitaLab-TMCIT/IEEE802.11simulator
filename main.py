@@ -41,6 +41,17 @@ OFDM_DATA_BIT = {
     54: 216
 }
 
+ACK_TIME = {
+    6: 52,
+    9: 44,
+    12: 36,
+    18: 32,
+    24: 28,
+    36: 28,
+    48: 24,
+    54: 24
+}
+
 
 class User:
     def __init__(self, id, n=0, seed=None):
@@ -209,7 +220,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
 
 
 if __name__ == "__main__":
-    n = 40
+    n = 80
 
     users = create_users(n)
     simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='a')
