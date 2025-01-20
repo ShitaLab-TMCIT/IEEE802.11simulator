@@ -49,7 +49,9 @@
   {1em}{}
 
   \setlength{\parindent}{1em}
-% \setlength{\belowcaptionskip}{1em} % キャプション下の余白を -10pt に設定
+
+\captionsetup[table]{skip=0pt}
+% \setlength{\belowcaptionskip}{1em} % キャプション下の余白を設定
 
 
 
@@ -69,19 +71,19 @@
     \begin{center}
         {\vspace{-1em}}
 
-        {\fontsize{15pt}{15pt}\selectfont{クロスレイヤシミュレータ開発における無線LANシミュレータの開発}}
+        {\fontsize{15pt}{15pt}\selectfont{クロスレイヤシミュレータにおける無線LAN評価モデルの検討}}
 
         {\vspace{1.3em}}
 
-        {\fontsize{13pt}{13pt}\selectfont{Development of a Wireless LAN Simulator for Cross-Layer Simulator Development }}
+        {\fontsize{13pt}{13pt}\selectfont{A Study of a Wireless LAN Evaluation Model in a Cross-Layer Simulator}}
     \end{center}
 
     \vspace{0.1em}
 
     \begin{flushright}
-      {\fontsize{11pt}{11pt}\selectfont{T5-16 \; 下沢亮太郎}}
+      {\fontsize{11pt}{11pt}\selectfont{T5-16 \, 下沢亮太郎}}
       \\
-      {\fontsize{11pt}{11pt}\selectfont{指導教員 \; 設樂勇}}
+      {\fontsize{11pt}{11pt}\selectfont{指導教員 \, 設樂勇}}
     \end{flushright}
 
     \vspace{1em}
@@ -123,12 +125,13 @@ CSMA/CAでは,端末は送信チャネルをキャリア感知(Carrier Sense)し
 となり,スロット数$s$は
 
 \begin{align}
-  s &= \mathrm{randint}(1, \; \min(\text{cw\_max}, \; 1023))
+  s &= \mathrm{randint}(1, \, \min(\text{cw\_max}, \, 1023))
+  \label{slot}
 \end{align}
 
-\begin{align}
-  \text{slots} &= \mathrm{randint}(1, \; \min(\text{cw\_max}, \; 1023))
-\end{align}
+% \begin{align}
+%   \text{slots} &= \mathrm{randint}(1, \, \min(\text{cw\_max}, \, 1023))
+% \end{align}
 
 
 で定義される.
@@ -155,7 +158,7 @@ UDPレベルでの無線LAN通信をシミュレートするために,簡易的�
 
 \section{実装とシミュレーション設定}
 \subsection{Userクラスの設計}
-本研究のシミュレータ実装では、各端末を\texttt{User}クラスとして定義し、端末ごとのバックオフスロットや再送回数などを管理している。表\ref{tab:user-class}に主なメンバ変数と役割をまとめる。
+本研究のシミュレータ実装では、各端末を\texttt{User}クラスとして定義し、端末ごとのCWや再送回数などを管理している.表\ref{tab:user-class}に主なメンバ変数と役割をまとめる.
 
 \begin{table}[H]
   \centering
@@ -163,33 +166,45 @@ UDPレベルでの無線LAN通信をシミュレートするために,簡易的�
   \label{tab:user-class}
   \begin{tabularx}{\columnwidth}{lX}
     \hline
-    \textbf{名称} & \textbf{説明} \\
+    % \textbf{名称} & \textbf{説明} \\
+    名称 & 説明 \\
     \hline
-    \multicolumn{2}{l}{\textbf{メンバ変数}} \\[2pt]
+    \multicolumn{2}{l}{メンバ変数} \\
     \hline
-    \texttt{id} & 端末を一意に識別するためのID。 \\
-    \texttt{num\_re\_trans} & 再送回数。衝突や失敗時に加算され、\newline
-                             次回の\texttt{slots}計算にも影響を与える。 \\
-    \texttt{slots} & バックオフに使用するスロット数。 \newline
-                    \texttt{calc\_slots()}メソッドにより動的に算出。 \\
-    \texttt{num\_transmitted} & 送信成功回数。シミュレーションで\newline
-                               送信に成功するたびに加算される。 \\
-    \texttt{data\_transmitted} & 送信したデータ量（bit）。\newline
-                                スループット計算の基礎となる。 \\
+    \texttt{id} & 端末を識別するためのID\\
+    \texttt{num\_re\_trans} & 再送回数\\
+    \texttt{slots} & スロット数\\
+    \texttt{num\_transmitted} & 送信成功回数\\
+    \texttt{data\_transmitted} & 送信したデータ量 \, [bit]\\
     \hline
-    \multicolumn{2}{l}{\textbf{主なメソッド}} \\[2pt]
+    \multicolumn{2}{l}{主なメソッド} \\
     \hline
-    \texttt{calc\_slots()} & コンテンションウィンドウ最大値 \newline
-                            (\texttt{cw\_max} = $2^{4+n} - 1$) を算出し、\newline
-                            その範囲でランダムに\texttt{slots}を決定。 \\
-    \texttt{re\_transmit()} & 衝突時などに呼び出され、\texttt{num\_re\_trans}を1増やした上で、\newline
-                             \texttt{calc\_slots()}を用いて\texttt{slots}を再計算。 \\
-    \texttt{reset\_slots()} & 送信成功時などに\texttt{num\_re\_trans}を0にリセットし、\newline
-                             新たに\texttt{slots}を割り当てる。 \\
+    \texttt{calc\_slots()} &(\ref{slot})式に従い\texttt{slots}を決定\\
+    \texttt{re\_transmit()} & 再送処理\\
+    \texttt{reset\_slots()} & 新たに\texttt{slots}を割り当てる\\
     \hline
   \end{tabularx}
 \end{table}
 
+\subsection{シミュレーションパラメータ}
+表\ref{tab:sim-param}に、本研究で用いた代表的なシミュレーションパラメータを示す。バージョン違い（IEEE 802.11a/b/g）によりスロット時間やDIFS/SIFSなどのタイミングパラメータが異なるため、対応するモードを選択することで、実環境に近い動作を切り替えられる。  
+
+\begin{table}[H]
+  \centering
+  \caption{シミュレーションパラメータの例}
+  \label{tab:sim-param}
+  \begin{tabularx}{0.9\columnwidth}{@{\hspace{1em}}l@{\hspace{4.5em}}l}
+    \hline
+    パラメータ & 値・例 \\
+    \hline
+    シミュレーション時間 & 60 \, [$\mathrm{s}$] \\
+    スロット時間 (802.11a) & \, 9 \, [$\mathrm{\mu s}$] \\
+    DIFS (802.11a) & 34 \, [$\mathrm{\mu s}$] \\
+    SIFS (802.11a) & 16 \, [$\mathrm{\mu s}$] \\
+    データレート & 24 \, [Mbps] \\
+    \hline
+  \end{tabularx}
+\end{table}
 
 
 \section{結果, 考察}
@@ -213,7 +228,7 @@ UDPレベルでの無線LAN通信をシミュレートするために,簡易的�
 
 \begin{thebibliography}{9}
   \bibitem{midori}守倉正博, 久保田周治, 『インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書』, 株式会社インプレスコミュニケーションズ, 2016年
-  \bibitem{paper}Y. Morino, T. Hiraguri, H. Yoshino, K. Nishimori, T. Matsuda, ``A Novel Collision Avoidance Scheme Using Optimized Contention Window in Dense Wireless LAN Environments*'' \; \textit{IEICE TRANS. COMMUN.}, VOL.E99-B, NO.11 NOVEMBER 2016
+  \bibitem{paper}Y. Morino, T. Hiraguri, H. Yoshino, K. Nishimori, T. Matsuda, ``A Novel Collision Avoidance Scheme Using Optimized Contention Window in Dense Wireless LAN Environments*'' \, \textit{IEICE TRANS. COMMUN.}, VOL.E99-B, NO.11 NOVEMBER 2016
 \end{thebibliography}
 
 
