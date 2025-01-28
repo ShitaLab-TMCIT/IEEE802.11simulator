@@ -26,6 +26,7 @@
 \usepackage{here}
 \usepackage{caption}
 \usepackage{tabularx}
+\usepackage{subcaption}
 
 % \setmainfont[Ligatures=TeX]{Times New Roman}
 % \setmainjfont[BoldFont=MS Gothic]{MS Mincho}
@@ -91,7 +92,7 @@
     \thispagestyle{empty}
 ]
 
-\section{緒言}
+\section{はじめに}
 % 近年,無線通信端末利用者の急増に伴い様々な場所で無線通信システムが利用されており,今後も利用の増加と発展が見込まれている.近年の無線通信技術の進歩に伴い,システムが高機能化・複雑化しており,従来のようにレイヤごとに独立した性能評価を行う手法では通信全体の実用的な評価を十分に行うことが困難になりつつある.そのため,通信全体をクロスレイヤで評価できる計算機シミュレータの開発が求められている.本研究ではクロスレイヤシミュレータにおけるMACレイヤの挙動をシミュレートする機能の開発を行い,その有効性を評価することを目指した.
 
 近年,無線通信端末の利用者が急増し,さまざまな場所で無線通信システムが利用されている.今後もさらなる利用拡大と機能高度化が見込まれる一方,無線通信技術の進歩に伴いシステムが高機能化・複雑化している.従来のように,各レイヤを独立して評価する手法では,通信全体を俯瞰した実用的な性能評価が難しくなりつつある.そのため,物理層から上位層までを跨いで統合的に評価できるクロスレイヤシミュレータの開発が求められている.本研究では,クロスレイヤシミュレータの一部としてMACレイヤの挙動をシミュレートする機能を開発し,その有効性を評価することを目的とする.
@@ -115,8 +116,21 @@ CSMA/CAでは,端末が送信チャネルをキャリアセンスし,チャネ�
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1\columnwidth]{./assets/csmaca-1.png}
-  \caption{CSMA/CA概要}
+
+  \begin{subfigure}{\columnwidth}
+    \centering
+    \includegraphics[width=1\columnwidth]{./assets/csma-ca-s.png}
+    \caption{CSMA/CA成功例}
+  \end{subfigure}
+
+
+  \begin{subfigure}{\columnwidth}
+    \centering
+    \includegraphics[width=1\columnwidth]{./assets/csma-ca-f.png}
+    \caption{CSMA/CA失敗例}
+  \end{subfigure}
+  % \includegraphics[width=1\columnwidth]{./assets/csmaca-1.png}
+  % \caption{CSMA/CA概要図}
   \label{CSMA/CA}
 \end{figure}
 
