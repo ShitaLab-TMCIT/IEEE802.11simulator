@@ -110,7 +110,7 @@
 
 IEEE 802.11規格では,CSMA/CAと呼ばれる方式を採用している.これは,送信前にチャネルが空いているかを確認し,空いていれば送信を試みる手法である.図\ref{CSMA/CA}にCSMA/CAの概要を示す.
 
-CSMA/CAでは,端末が送信チャネルをキャリアセンスし,チャネルが空いているときにパケット送信を行う.一方,チャネルが使用中であれば一定時間バックオフを行う.バックオフ期間中は端末ごとにランダムにスロット数を生成し,それに従って待機することで他端末との衝突を回避する.
+CSMA/CAでは,端末が送信チャネルをキャリアセンスし,チャネルが空いているときにパケット送信を行う.一方,チャネルが使用中であれば一定時間バックオフを行う.バックオフ期間中は端末ごとにランダムにスロット数を生成し,それに従って待機することで他端末との衝突を回避する.複数の端末が同じスロット数を生成した場合には送信タイミングが重なり,衝突が発生するため再送処理が必要となる.
 
 
 \begin{figure}[H]
@@ -147,7 +147,7 @@ CSMA/CAでは,端末が送信チャネルをキャリアセンスし,チャネ�
 \subsection{パケット構成モデル化}
 % UDPレベルでの無線LAN通信をシミュレートするために,簡易的にパケットを構成するモデルを作成した.図\ref{packet}に,モデル化されたパケットの構成図を示す.
 
-本研究では,UDPレベルの無線LAN通信を再現するためにPLCPプリアンブル,MACヘッダー,FCSといったプリアンブルやフッタといったオーバーヘッドを含めたパケット構成を簡易的にモデル化した.図\ref{packet}にモデル化したパケットの構成図を示す.
+本研究では,UDPレベルの無線LAN通信を再現するためにPLCPプリアンブル,MACヘッダー,FCS等のプリアンブルやフッタ,オーバーヘッドを含めたパケット構成を簡易的にモデル化した.図\ref{packet}にモデル化したパケットの構成図を示す.
 
 
 
@@ -168,65 +168,63 @@ CSMA/CAでは,端末が送信チャネルをキャリアセンスし,チャネ�
 
 本研究では,CSMA/CA方式を用いた無線LAN通信を再現するために,Pythonを用いてシミュレータを実装した.シミュレータの主な機能として,端末ごとのCWや再送回数の管理,スロット数の動的な設定,再送処理などを実装した.
 
-また,シミュレータ本体はライブラリを\texttt{random}のみに依存するように設計し,他のライブラリに依存しないようにした.これにより,バージョンに依存しずらい後方互換性が保たれたシミュレータを実装することができた.
+また,シミュレータ本体は標準ライブラリである\texttt{random}のみに依存するように設計し,他のライブラリに依存しないようにした.これにより,バージョンに依存しづらい後方互換性が保たれたシミュレータを実装することができた.
 
 
 \subsection{\texttt{User}クラスの設計}
 本研究のシミュレータ実装では、各端末を\texttt{User}クラスとして定義し、端末ごとのCWや再送回数などを管理している.表\ref{tab:user-class}に主なメンバ変数と役割をまとめる.
 
-\begin{table}[H]
-  \centering
-  \caption{Userクラスのメンバ変数とメソッドの一覧}
-  \label{tab:user-class}
-  \begin{tabularx}{\columnwidth}{lX}
-    \hline
-    % \textbf{名称} & \textbf{説明} \\
-    名称 & 説明 \\
-    \hline
-    \multicolumn{2}{l}{メンバ変数} \\
-    \hline
-    \texttt{id} & 端末を識別するためのID\\
-    \texttt{num\_re\_trans} & 再送回数\\
-    \texttt{slots} & スロット数\\
-    \texttt{num\_transmitted} & 送信成功回数\\
-    \texttt{data\_transmitted} & 送信したデータ量 \, [bit]\\
-    \hline
-    \multicolumn{2}{l}{主なメソッド} \\
-    \hline
-    \texttt{calc\_slots()} &(\ref{slot})式に従い\texttt{slots}を決定\\
-    \texttt{re\_transmit()} & 再送処理\\
-    \texttt{reset\_slots()} & 新たに\texttt{slots}を割り当てる\\
-    \hline
-  \end{tabularx}
-\end{table}
+% \begin{table}[H]
+%   \centering
+%   \caption{Userクラスのメンバ変数とメソッドの一覧}
+%   \label{tab:user-class}
+%   \begin{tabularx}{\columnwidth}{lX}
+%     \hline
+%     % \textbf{名称} & \textbf{説明} \\
+%     名称 & 説明 \\
+%     \hline
+%     \multicolumn{2}{l}{メンバ変数} \\
+%     \hline
+%     \texttt{id} & 端末を識別するためのID\\
+%     \texttt{num\_re\_trans} & 再送回数\\
+%     \texttt{slots} & スロット数\\
+%     \texttt{num\_transmitted} & 送信成功回数\\
+%     \texttt{data\_transmitted} & 送信したデータ量 \, [bit]\\
+%     \hline
+%     \multicolumn{2}{l}{主なメソッド} \\
+%     \hline
+%     \texttt{calc\_slots()} &(\ref{slot})式に従い\texttt{slots}を決定\\
+%     \texttt{re\_transmit()} & 再送処理\\
+%     \texttt{reset\_slots()} & 新たに\texttt{slots}を割り当てる\\
+%     \hline
+%   \end{tabularx}
+% \end{table}
 
 \subsection{シミュレーションパラメータ}
-表\ref{tab:sim-param}に,本研究で用いシミュレーションパラメータを示す.バージョン違い(IEEE 802.11a/b/g)によりスロット時間やDIFS/SIFSなどのタイミングパラメータが異なるため,対応するモードを選択することで,より実環境に近い動作を再現できる.
+表\ref{tab:sim-param}に,本研究で用いシミュレーションパラメータを示す.規格(IEEE 802.11a/b/g)によりスロット時間やDIFS/SIFSなどのタイミングパラメータが異なるため,対応するモードを選択することで,より実環境に近い動作を再現できる.
 
 
 \begin{table}[H]
   \centering
   \caption{シミュレーションパラメータの例}
   \label{tab:sim-param}
-  \begin{tabularx}{\columnwidth}{@{\hspace{2em}}l@{\hspace{4em}}l}
+  \begin{tabular}{|c|@{\hspace{1.8em}}l|}
     \hline
     パラメータ & 値・例 \\
     \hline
     シミュレーション時間 & 60 \, [$\mathrm{s}$] \\
-    スロット時間 (802.11a) & \, 9 \, [$\mathrm{\mu s}$] \\
+    スロット時間 (802.11a) & 9 \, [$\mathrm{\mu s}$] \\
     DIFS (802.11a) & 34 \, [$\mathrm{\mu s}$] \\
     SIFS (802.11a) & 16 \, [$\mathrm{\mu s}$] \\
-    データレート & 24 \, [Mbps] \\
-    ステーション数 & 80 \, [台] \\
+    伝送レート & 24 \, [Mbps] \\
+    端末数 & 80 \, [台] \\
     \hline
-  \end{tabularx}
+  \end{tabular}
 \end{table}
 
 
-\section{結果及び考察}
-図\ref{fig:simulation-result}に,横軸を端末数,縦軸をスループットとしてプロットしたシミュレーション結果と理論値を示す.端末数が80台の場合でも,スループットが理論値とおおむね+2.75\%程度の誤差で一致していることがわかる.
-
-一方,端末数が増加するにつれて理論値との差が徐々に拡大するが,これは参考とした文献\cite{paper}とのモデル化の違いなどが影響していると考えられる.
+\section{評価}
+図\ref{fig:simulation-result}に,横軸を端末数,縦軸をスループットとしてプロットしたシミュレーション結果と理論値を示す.
 
 
 \begin{figure}[H]
@@ -236,6 +234,10 @@ CSMA/CAでは,端末が送信チャネルをキャリアセンスし,チャネ�
   \label{fig:simulation-result}
 \end{figure}
 
+
+理論値との差が一番大きい端末数が80台の場合でも+2.75\%程度の誤差に収まっていることがわかる.
+
+また,端末数が増加するにつれて理論値との差が徐々に拡大することに対しては,参考とした文献\cite{paper}とのモデル化方法の違いが影響していると考えられる.
 
 \section{結言}
 本研究では,クロスレイヤシミュレータの一部として無線LAN通信の挙動を再現するシミュレータを開発し,CSMA/CAを中心とした基本動作のモデル化とその有効性を検証した.
