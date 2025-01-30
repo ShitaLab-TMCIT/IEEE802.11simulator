@@ -270,7 +270,7 @@ SIFSは，ACKフレームなど，優先度の高い制御フレームの送信�
 本研究では，クロスレイヤシミュレータの一部として無線LAN通信の挙動を再現するシミュレータを開発し，CSMA/CAを中心とした基本動作のモデル化とその有効性を検証した．
 
 今後の課題としては，連続送信ではなくポアソン分布などに従った送信間隔を導入することで実際の通信頻度に近い状況を再現することや，
-同一セル内でのCSが届かない距離離れている端末間の通信が同時に起こった場合の衝突の検知を行うことが挙げられる．
+衝突が起きても受信電力が干渉電力より十分に大きい場合，フレームの複合に成功するキャプチャ効果を各端末ごとに実装することが挙げられる．
 
 
 % 端末間の距離による自由空間伝搬損失などの要素を考慮し，より実環境に近い評価を行う必要がある.
@@ -283,6 +283,7 @@ SIFSは，ACKフレームなど，優先度の高い制御フレームの送信�
   \bibitem{midori}守倉正博, 久保田周治, 『インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書』, 株式会社インプレスコミュニケーションズ, 2016年
   \bibitem{paper}Y. Morino, T. Hiraguri, H. Yoshino, K. Nishimori, T. Matsuda, ``A Novel Collision Avoidance Scheme Using Optimized Contention Window in Dense Wireless LAN Environments*'' \, \textit{IEICE TRANS. COMMUN.}, VOL.E99-B, NO.11 NOVEMBER 2016
   \bibitem{book1}西森健太郎,平栗健史,『MIMOからMassive MIMOを用いた伝送技術とクロスレイヤ評価手法』, コロナ社, 2017年.
+  \bibitem{book2}設樂勇, 平栗健史, 谷口諒太郎, 西森健太郎, 『レイトレースを用いた3次元クロスレイヤシミュレータの開発』, 社団法人 電子情報通信学会 信学技報
 \end{thebibliography}
 
 
