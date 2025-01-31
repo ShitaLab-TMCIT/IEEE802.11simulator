@@ -41,6 +41,17 @@ OFDM_DATA_BIT = {
     54: 216
 }
 
+ACK_TIME = {
+    6: 52,
+    9: 44,
+    12: 36,
+    18: 32,
+    24: 28,
+    36: 28,
+    48: 24,
+    54: 24
+}
+
 
 class User:
     def __init__(self, id, n=0, seed=None):
@@ -98,7 +109,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     preamble_time = 20 / (10**6)
     FCS_time = 4 * 8 / (rate * 10**6)
     # ACK_time = 14 * 8 / (rate * 10**6)
-    ACK_time = 20 / 10**6
+    ACK_time = 28 / 10**6
     MAC_header_time = 24 * 8 / (rate * 10**6)
 
     cw_time_list = [(user.id, user.slots) for user in users]
@@ -130,8 +141,8 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             collision_count += 1
 
             # バックオフ + データ送信 + DIFS時間が今の時間を超えないなら
-            if (current_time + cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + calc_ifs_time('DIFS', mode)) < duration:
-                current_time += cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + calc_ifs_time('DIFS', mode)
+            if (current_time + cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + nav_time) < duration:
+                current_time += cw_time + preamble_time + MAC_header_time + trans_time + FCS_time + nav_time
 
                 if output_mode in [PRINT_MODE[0], PRINT_MODE[1]]:
 
@@ -209,7 +220,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
 
 
 if __name__ == "__main__":
-    n = 40
+    n = 80
 
     users = create_users(n)
     simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='a')
