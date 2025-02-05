@@ -11,3 +11,4 @@ manual/*
 *.out
 *.synctex.gz
 out.csv
+*.toc

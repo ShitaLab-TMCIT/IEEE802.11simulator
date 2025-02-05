@@ -1,0 +1,283 @@
+\RequirePackage{plautopatch} % pLaTeX / upLaTeX / LuaTeX-ja の不具合修正など
+\documentclass[a4paper,10.5pt]{ltjsarticle}
+\usepackage{luatexja}        % LuaTeX-ja で日本語を扱う
+
+% -------------------------------
+% フォント関連の設定
+% -------------------------------
+\usepackage{luatexja-fontspec}
+
+% -------------------------------
+% 数式・数理フォントパッケージ
+% -------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}          % \mathbb などを使用可能に
+
+% -------------------------------
+% 図を生成するためのパッケージ
+% -------------------------------
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+% -------------------------------
+% よく使われるパッケージ群
+% -------------------------------
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{caption}
+\usepackage{flushend}
+\usepackage{graphicx}
+\usepackage{here}
+\usepackage{subfig}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{indentfirst}
+
+% -------------------------------
+% 用紙余白等の設定
+% -------------------------------
+\geometry{
+  top=20mm,
+  bottom=20mm,
+  left=20mm,
+  right=20mm
+}
+
+\setlength{\baselineskip}{14pt}  % 行間
+
+% -------------------------------
+% タイトルやセクション見出しのフォーマット
+% -------------------------------
+\titleformat{\section}
+  {\large\bfseries}
+  {\thesection.}
+  {1\zw}{}
+
+\titleformat{\subsection}
+  {\large\bfseries}
+  {\thesubsection.}
+  {1\zw}{}
+
+\titleformat{\subsubsection}
+  {\large\bfseries}
+  {\thesubsubsection.}
+  {1\zw}{}
+
+\titlespacing*{\section}{0em}{1em}{1em}
+\titlespacing*{\subsection}{0em}{1em}{1em}
+\titlespacing*{\subsubsection}{0em}{1em}{1em}
+
+% -------------------------------
+% 目次の設定
+% -------------------------------
+
+\setcounter{tocdepth}{3}          % 目次の深さ
+\makeatletter
+\renewcommand{\numberline}[1]{#1.~}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\hfill}
+\renewcommand{\cftsubsubsecleader}{\hfill}
+\cftpagenumbersoff{subsection}
+\cftpagenumbersoff{subsubsection}
+% (例) section, subsection, subsubsection のインデントを調整
+\cftsetindents{section}{0em}{5em}
+\cftsetindents{subsection}{1em}{5em}
+\cftsetindents{subsubsection}{1.5em}{5em}
+\makeatother
+
+% キャプション（図表の見出し）フォントサイズ設定
+\DeclareCaptionFont{designatedFont}{\fontsize{10.5pt}{14pt}\selectfont}
+\captionsetup{font=designatedFont}
+
+% -------------------------------
+% タイトル情報
+% -------------------------------
+% \title{サンプル論文タイトル}
+% \author{山田 太郎}
+% \date{\today}
+
+
+\begin{document}
+
+% \maketitle
+% \thispagestyle{empty}
+% \clearpage
+
+\tableofcontents
+\thispagestyle{empty}
+
+
+
+% ******************************************************
+% 1. はじめに
+% ******************************************************
+\clearpage
+\setcounter{page}{1}
+
+\section{はじめに}
+本稿では、Lua\TeX-ja 環境を使って日本語文書を整形するサンプルを示します。
+\cite{Example2023} に示される技術を参考にしつつ、数式や図表を多用する文書の書き方を概説します。
+
+近年、ドキュメント作成において日本語組版が必要とされる機会はますます増えています。
+また、数式や画像、グラフなどを駆使する専門的な文章では、LaTeX は非常に有力なツールとなります。
+以下では、はじめに本研究の背景と目的を説明し、続いて具体例を通して実際の記法を示します。
+
+\subsection{研究の背景}
+組版システムとしての LaTeX は、古くから数式表現や美しいレイアウトのために用いられてきました。
+特に欧文環境では広く普及していましたが、日本語に対応するためには pLaTeX や upLaTeX、LuaLaTeX など
+複数のエンジンと設定を駆使する必要があります。  
+本稿では、その中でもより柔軟な LuaLaTeX と \texttt{luatexja} パッケージを使用して日本語を扱います。
+
+\subsubsection{研究の動機}
+本研究（サンプル文書）を執筆する動機は以下のとおりです。
+\begin{enumerate}
+  \item 日本語と欧文フォントのレイアウトが混在する環境下でのドキュメント作成
+  \item 図や表を自動生成しながら、数式を多用するテクニカルな執筆を効率化
+  \item 日本語の禁則処理や字下げ、フォント警告の回避など、実運用上のコツを示す
+\end{enumerate}
+
+% ******************************************************
+% 2. 数式の例
+% ******************************************************
+\section{数式の例}
+\[
+  \mathbb{R}, \quad \mathbb{Z}, \quad \mathbb{Q}
+\]
+それぞれ、実数集合・整数集合・有理数集合を表します。
+本稿でも、これらの記号を用いてサンプルの数式を説明します。
+
+\subsection{線形方程式}
+まずはもっともシンプルな一次方程式を示します。
+\begin{equation}
+  y = \alpha x + \beta, \quad x, y \in \mathbb{R}.
+  \label{eq:lin}
+\end{equation}
+ここで、$\alpha, \beta \in \mathbb{R}$ はパラメータです。
+この式は線形回帰や基本的な予測モデルとして幅広く応用されています。
+
+\subsubsection{二次方程式}
+もう少し複雑な例として、二次方程式を考えます。
+\begin{equation}
+  y = ax^2 + bx + c, \quad x, y \in \mathbb{R}.
+\end{equation}
+ここで $a, b, c$ は定数です。  
+このような多項式表現は、数値解析から物理シミュレーションまで幅広い分野で利用されています。
+
+% ******************************************************
+% 3. 自動生成される図の例
+% ******************************************************
+\clearpage
+\section{自動生成される図の例}
+以下に、\texttt{pgfplots} でサイン波を描画した例を示します。
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.7\linewidth,
+    xlabel={$x$軸},
+    ylabel={$y$軸},
+    grid=major,
+    domain=0:2*pi,
+    samples=200,
+]
+\addplot[blue, thick]{sin(deg(x))};
+\addlegendentry{$y = \sin(x)$}
+\end{axis}
+\end{tikzpicture}
+\caption{自動生成された $\sin(x)$ グラフの例}
+\label{fig:sin}
+\end{figure}
+
+図~\ref{fig:sin} は $\sin(x)$ のグラフを示しています。
+LaTeX で外部ファイルを使わずに図を描画できるため、再現性の高い資料を作成可能です。
+
+\subsection{他の波形の例}
+同様に、$\cos(x)$ や $\tan(x)$ などを描画することで、振動現象や周期関数の可視化が容易になります。
+研究分野やプレゼンテーションの内容によっては、様々な関数のグラフを重ね合わせることで
+データの相関や差異を視覚的に示すことができます。
+
+% ******************************************************
+% 4. 表の例
+% ******************************************************
+\section{表の例}
+簡単な表を示します。以下では、よく知られた数学定数の概算値と解釈をまとめました。
+
+\begin{table}[h]
+\centering
+\caption{サンプル表: 代表的な数学定数}
+\label{tbl:sample}
+\begin{tabular}{c|c|c}
+\hline
+\textbf{ID} & \textbf{値} & \textbf{備考} \\
+\hline
+$\pi$   & 3.14159 & 円周率。円の周長と直径の比。 \\
+$e$     & 2.71828 & 自然対数の底。指数関数や対数関数の基礎。 \\
+$\sqrt{2}$ & 1.41421 & 2 の平方根。 \\
+\hline
+\end{tabular}
+\end{table}
+
+表~\ref{tbl:sample} に示したように、各定数は数学や物理、工学において不可欠な役割を果たします。
+
+\subsection{表の活用例}
+表はデータをコンパクトに示す際に非常に有用です。
+大量の数値比較やアルゴリズムの性能を整理するだけでなく、論文やレポートでも結果を
+わかりやすくまとめるために多用されます。
+
+% ******************************************************
+% 5. 考察
+% ******************************************************
+
+\clearpage
+\section{考察}
+
+\subsection{Lua\LaTeX-ja の利点}
+Lua\LaTeX-ja を利用することで、日本語の禁則処理や縦組などもオプションで対応可能です。
+また、フォントまわりの問題（10.5pt がないといった警告）を 
+\begin{verbatim}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\end{verbatim}
+である程度回避できます。
+
+\subsection{図表・数式の統合}
+LaTeX は文字や数式だけでなく、図表との融合にも優れています。
+`pgfplots` を用いた自動生成グラフはもちろん、外部画像ファイルの取り込みや複数の図表を並べるレイアウト機能も充実しています。
+
+\subsubsection{今後の課題}
+さらなる課題としては、大量のページ数を要する大規模ドキュメントにおけるビルド時間の短縮や、
+カスタムクラスファイルの整備があります。これらを効率よく行うためには、Makefile などのビルドシステムや
+Docker 等のコンテナ技術と組み合わせる方法も検討されるべきでしょう。
+
+% ******************************************************
+% 6. 結論
+% ******************************************************
+\section{結論}
+以上のように、LaTeX + LuaTeX-ja 環境を用いて、日本語文書に数式・図表を統合する例を示しました。  
+外部ファイルを使わずに図を生成する \texttt{tikz}/\texttt{pgfplots} は、ドキュメントの再現性や共有に有用です。  
+また、10.5pt のフォント設定やキャプション調整などのテクニックを利用することで、警告を減らしつつ日本語の可読性を保つことができます。
+
+% ******************************************************
+% 参考文献
+% ******************************************************
+\clearpage
+\addcontentsline{toc}{section}{参考文献}
+\begin{thebibliography}{99}
+
+\bibitem{Example2023}
+Ichiro Suzuki,
+\textit{A Comprehensive Guide to LuaTeX-ja},
+Journal of TeX Exploration, Vol.12, No.3, pp.45--52, 2023.
+
+\end{thebibliography}
+
+\end{document}
