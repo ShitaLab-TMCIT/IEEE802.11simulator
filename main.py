@@ -65,7 +65,7 @@ class User:
         self.data_transmitted = 0
 
     def calc_slots(self):
-        cw_max = 2 ** (4 + self.num_re_trans) - 1
+        cw_max = 3 ** (4 + self.num_re_trans) - 1
         self.slots = random.randint(1, min(cw_max, 1023))
         return self.slots
 
