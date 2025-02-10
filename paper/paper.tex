@@ -40,6 +40,7 @@
 \usepackage{tabularx}
 \usepackage{subcaption}
 \usepackage{indentfirst}
+\usepackage{subfigure}
 
 % -------------------------------
 % 用紙余白等の設定
@@ -123,148 +124,67 @@
 \setcounter{page}{1}
 
 \section{はじめに}
-本稿では、Lua\TeX-ja 環境を使って日本語文書を整形するサンプルを示します。
-\cite{Example2023} に示される技術を参考にしつつ、数式や図表を多用する文書の書き方を概説します。
 
-近年、ドキュメント作成において日本語組版が必要とされる機会はますます増えています。
-また、数式や画像、グラフなどを駆使する専門的な文章では、LaTeX は非常に有力なツールとなります。
-以下では、はじめに本研究の背景と目的を説明し、続いて具体例を通して実際の記法を示します。
+近年,無線通信端末の利用者が急増し，さまざまな場所で無線通信システムが利用されている．今後もさらなる利用拡大と機能高度化が見込まれる一方，無線通信技術の進歩に伴いシステムが高機能化・複雑化している一方で，研究開発では各レイヤごとに検討が行われている．
 
-\subsection{研究の背景}
-組版システムとしての LaTeX は、古くから数式表現や美しいレイアウトのために用いられてきました。
-特に欧文環境では広く普及していましたが、日本語に対応するためには pLaTeX や upLaTeX、LuaLaTeX など
-複数のエンジンと設定を駆使する必要があります。  
-本稿では、その中でもより柔軟な LuaLaTeX と \texttt{luatexja} パッケージを使用して日本語を扱います。
 
-\subsubsection{研究の動機}
-本研究（サンプル文書）を執筆する動機は以下のとおりです。
-\begin{enumerate}
-  \item 日本語と欧文フォントのレイアウトが混在する環境下でのドキュメント作成
-  \item 図や表を自動生成しながら、数式を多用するテクニカルな執筆を効率化
-  \item 日本語の禁則処理や字下げ、フォント警告の回避など、実運用上のコツを示す
-\end{enumerate}
+しかし，単一レイヤでの評価では通信システム全体の性能を十分に把握することができない．
 
-% ******************************************************
-% 2. 数式の例
-% ******************************************************
-\section{数式の例}
-\[
-  \mathbb{R}, \quad \mathbb{Z}, \quad \mathbb{Q}
-\]
-それぞれ、実数集合・整数集合・有理数集合を表します。
-本稿でも、これらの記号を用いてサンプルの数式を説明します。
+本研究では，無線通信全体の品質を総合的に評価するために，実環境の電波伝搬特性を考慮した物理層とMAC(Medium Access Control)層が連携したシミュレータの開発の一環として，IEEE 802.11規格に基づくCSMA/CA(Carrier Sense Multiple Access with Collision Avoidance)方式を用いたMAC層の挙動をする無線LAN(Local Area Network)モデルを開発し，その有効性を評価することを目指す．
 
-\subsection{線形方程式}
-まずはもっともシンプルな一次方程式を示します。
-\begin{equation}
-  y = \alpha x + \beta, \quad x, y \in \mathbb{R}.
-  \label{eq:lin}
-\end{equation}
-ここで、$\alpha, \beta \in \mathbb{R}$ はパラメータです。
-この式は線形回帰や基本的な予測モデルとして幅広く応用されています。
 
-\subsubsection{二次方程式}
-もう少し複雑な例として、二次方程式を考えます。
-\begin{equation}
-  y = ax^2 + bx + c, \quad x, y \in \mathbb{R}.
-\end{equation}
-ここで $a, b, c$ は定数です。  
-このような多項式表現は、数値解析から物理シミュレーションまで幅広い分野で利用されています。
-
-% ******************************************************
-% 3. 自動生成される図の例
-% ******************************************************
 \clearpage
-\section{自動生成される図の例}
-以下に、\texttt{pgfplots} でサイン波を描画した例を示します。
+\section{無線LAN通信モデル}
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    width=0.7\linewidth,
-    xlabel={$x$軸},
-    ylabel={$y$軸},
-    grid=major,
-    domain=0:2*pi,
-    samples=200,
-]
-\addplot[blue, thick]{sin(deg(x))};
-\addlegendentry{$y = \sin(x)$}
-\end{axis}
-\end{tikzpicture}
-\caption{自動生成された $\sin(x)$ グラフの例}
-\label{fig:sin}
+\subsection{CSMA/CA方式}
+
+IEEE 802.11規格では，CSMA/CAと呼ばれるアクセス制御方式を採用している．図\ref{CSMA/CA}にCSMA/CAの概要を示す．
+
+
+CSMA/CAでは，送信したいパケットが発生した際にCarrier Sense(CS)を行い，チャネルが空いているとき(Idle)バックオフ時間という各端末がランダムなスロット数を生成し，それに従った待ち時間を待った後，再度キャリアセンスを行いチャネルがIdleであることを確認してからパケットを送信し，Busyだった場合はパケットを送信できるまでバックオフ時間を持ち越す．複数の端末が同じスロット数を生成した場合には送信タイミングが重なり，衝突が発生するため再送処理が必要となる．
+
+無線LAN通信ではバックオフ時間の生成に2進数バックオフ方式を採用している．バックオフ制御に用いるContention Window(CW)は，最大値の上限を1023スロットとして衝突回数に応じて変化する．再送回数を$n$とすると，CWの最大値$\mathrm{CW}_{\max}$とスロット数$s$は
+
+
+\begin{align}
+  \mathrm{CW}_{\max} &= 2^{4 + n} - 1
+\end{align}
+
+\begin{align}
+  s &= \mathrm{randint}(1, \, \min(c_{\max}, \, 1023))
+  \label{slot}
+\end{align}
+
+で求められる．
+
+衝突が発生するたびにCWの最大値は2倍に増加するため，再送回数が増えるほどバックオフ時間が長くなる可能性が高くなり，衝突の発生を抑制することができる．一方で，CWの増加がオーバーヘッドを引き起こし，実行スループットの低下につながる可能性がある．
+
+
+本シミュレータでは，端末クラスにスロット生成メソッドを実装し，インスタンスごとにスロット数と再送回数$n$を保持することで，各端末が送信を試みる際の待機時間を動的に設定する処理を実装した．
+
+\begin{figure}[htbp]
+  \centering
+
+  \begin{subfigure}{0.8}
+    \centering
+    \includegraphics[width=1\columnwidth]{./assets/csma-ca-s.png}
+    \caption{CSMA/CA成功例}
+    \label{1a}
+  \end{subfigure}
+
+
+  \begin{subfigure}{0.8}
+    \centering
+    \includegraphics[width=1\columnwidth]{./assets/csma-ca-f.png}
+    \caption{CSMA/CA失敗例}
+    \label{1b}
+  \end{subfigure}
+
+
+  \caption{CSMA/CAの概要}
+  \label{CSMA/CA}
 \end{figure}
 
-図~\ref{fig:sin} は $\sin(x)$ のグラフを示しています。
-LaTeX で外部ファイルを使わずに図を描画できるため、再現性の高い資料を作成可能です。
-
-\subsection{他の波形の例}
-同様に、$\cos(x)$ や $\tan(x)$ などを描画することで、振動現象や周期関数の可視化が容易になります。
-研究分野やプレゼンテーションの内容によっては、様々な関数のグラフを重ね合わせることで
-データの相関や差異を視覚的に示すことができます。
-
-% ******************************************************
-% 4. 表の例
-% ******************************************************
-\section{表の例}
-簡単な表を示します。以下では、よく知られた数学定数の概算値と解釈をまとめました。
-
-\begin{table}[h]
-\centering
-\caption{サンプル表: 代表的な数学定数}
-\label{tbl:sample}
-\begin{tabular}{c|c|c}
-\hline
-\textbf{ID} & \textbf{値} & \textbf{備考} \\
-\hline
-$\pi$   & 3.14159 & 円周率。円の周長と直径の比。 \\
-$e$     & 2.71828 & 自然対数の底。指数関数や対数関数の基礎。 \\
-$\sqrt{2}$ & 1.41421 & 2 の平方根。 \\
-\hline
-\end{tabular}
-\end{table}
-
-表~\ref{tbl:sample} に示したように、各定数は数学や物理、工学において不可欠な役割を果たします。
-
-\subsection{表の活用例}
-表はデータをコンパクトに示す際に非常に有用です。
-大量の数値比較やアルゴリズムの性能を整理するだけでなく、論文やレポートでも結果を
-わかりやすくまとめるために多用されます。
-
-% ******************************************************
-% 5. 考察
-% ******************************************************
-
-\clearpage
-\section{考察}
-
-\subsection{Lua\LaTeX-ja の利点}
-Lua\LaTeX-ja を利用することで、日本語の禁則処理や縦組などもオプションで対応可能です。
-また、フォントまわりの問題（10.5pt がないといった警告）を 
-\begin{verbatim}
-  \usepackage[T1]{fontenc}
-  \usepackage{lmodern}
-\end{verbatim}
-である程度回避できます。
-
-\subsection{図表・数式の統合}
-LaTeX は文字や数式だけでなく、図表との融合にも優れています。
-`pgfplots` を用いた自動生成グラフはもちろん、外部画像ファイルの取り込みや複数の図表を並べるレイアウト機能も充実しています。
-
-\subsubsection{今後の課題}
-さらなる課題としては、大量のページ数を要する大規模ドキュメントにおけるビルド時間の短縮や、
-カスタムクラスファイルの整備があります。これらを効率よく行うためには、Makefile などのビルドシステムや
-Docker 等のコンテナ技術と組み合わせる方法も検討されるべきでしょう。
-
-% ******************************************************
-% 6. 結論
-% ******************************************************
-\section{結論}
-以上のように、LaTeX + LuaTeX-ja 環境を用いて、日本語文書に数式・図表を統合する例を示しました。  
-外部ファイルを使わずに図を生成する \texttt{tikz}/\texttt{pgfplots} は、ドキュメントの再現性や共有に有用です。  
-また、10.5pt のフォント設定やキャプション調整などのテクニックを利用することで、警告を減らしつつ日本語の可読性を保つことができます。
 
 % ******************************************************
 % 参考文献
@@ -273,10 +193,10 @@ Docker 等のコンテナ技術と組み合わせる方法も検討されるべ�
 \addcontentsline{toc}{section}{参考文献}
 \begin{thebibliography}{99}
 
-\bibitem{Example2023}
-Ichiro Suzuki,
-\textit{A Comprehensive Guide to LuaTeX-ja},
-Journal of TeX Exploration, Vol.12, No.3, pp.45--52, 2023.
+\bibitem{midori}守倉正博, 久保田周治, 『インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書』, 株式会社インプレスコミュニケーションズ, 2016年
+\bibitem{paper}Y. Morino, T. Hiraguri, H. Yoshino, K. Nishimori, T. Matsuda, ``A Novel Collision Avoidance Scheme Using Optimized Contention Window in Dense Wireless LAN Environments*'' \, \textit{IEICE TRANS. COMMUN.}, VOL.E99-B, NO.11 NOVEMBER 2016
+\bibitem{book1}西森健太郎,平栗健史,『MIMOからMassive MIMOを用いた伝送技術とクロスレイヤ評価手法』, コロナ社, 2017年.
+\bibitem{book2}設樂勇, 平栗健史, 谷口諒太郎, 西森健太郎, 『レイトレースを用いた3次元クロスレイヤシミュレータの開発』, 社団法人 電子情報通信学会 信学技報
 
 \end{thebibliography}
 
