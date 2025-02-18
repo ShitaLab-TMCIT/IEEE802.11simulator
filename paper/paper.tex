@@ -1,5 +1,6 @@
 \RequirePackage{plautopatch} % pLaTeX / upLaTeX / LuaTeX-ja の不具合修正など
-\documentclass[a4paper,10.5pt]{ltjsarticle}
+\documentclass[a4paper,10pt]{ltjsarticle}
+\renewcommand{\baselinestretch}{1.05}
 \usepackage{luatexja}        % LuaTeX-ja で日本語を扱う
 
 % -------------------------------
@@ -27,20 +28,18 @@
 \usepackage{multicol}
 \usepackage{titlesec}
 \usepackage{tocloft}
-\usepackage{caption}
+\usepackage[compatibility=false]{caption}
 \usepackage{flushend}
 \usepackage{graphicx}
 \usepackage{here}
-\usepackage{subfig}
 \usepackage{multirow}
 \usepackage{threeparttable}
-\usepackage{tabularx}
+\usepackage{tabularx}  % 重複削除済み
 \usepackage{enumitem}
 \usepackage{url}
-\usepackage{tabularx}
-\usepackage{subcaption}
+\usepackage{subcaption}  % subfig の代わりにこれを使用
 \usepackage{indentfirst}
-\usepackage{subfigure}
+
 
 % -------------------------------
 % 用紙余白等の設定
@@ -165,17 +164,17 @@ CSMA/CAでは，送信したいパケットが発生した際にCarrier Sense(CS
 \begin{figure}[htbp]
   \centering
 
-  \begin{subfigure}{0.8}
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=1\columnwidth]{./assets/csma-ca-s.png}
+    \includegraphics[width=1\textwidth]{./assets/csma-ca-s.png}
     \caption{CSMA/CA成功例}
     \label{1a}
   \end{subfigure}
 
 
-  \begin{subfigure}{0.8}
+  \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[width=1\columnwidth]{./assets/csma-ca-f.png}
+    \includegraphics[width=1\textwidth]{./assets/csma-ca-f.png}
     \caption{CSMA/CA失敗例}
     \label{1b}
   \end{subfigure}
