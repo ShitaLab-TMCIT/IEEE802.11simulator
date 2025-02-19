@@ -1,5 +1,4 @@
 import random
-import math
 
 PRINT_MODE = {
     0: "Only Collision",
@@ -66,7 +65,7 @@ class User:
 
     def calc_slots(self):
         cw_max = 2 ** (4 + self.num_re_trans) - 1
-        self.slots = random.randint(1, min(cw_max, 1023))
+        self.slots = random.randint(0, min(cw_max, 1023))
         return self.slots
 
     def re_transmit(self):
