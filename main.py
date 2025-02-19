@@ -1,5 +1,4 @@
 import random
-import math
 
 PRINT_MODE = {
     0: "Only Collision",
