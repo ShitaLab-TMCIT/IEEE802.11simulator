@@ -7,9 +7,10 @@ from main import create_users, simulate_transmission, PRINT_MODE
 # 固定パラメータ
 duration = 60         # シミュレーション時間（秒）
 mode = 'a'            # 通信モード
-n_values = [1, 10, 20, 30, 40, 50, 60, 70, 80]
+# n_values = [1, 10, 20, 30, 40, 50, 60, 70, 80]
+n_values = list(range(1, 81))
 num_simulations = 1000  # 各シミュレーション回数
-max_processes = 8     # 同時に動作するプロセス数の上限
+max_processes = 16     # 同時に動作するプロセス数の上限
 
 # プログレスバー更新関数
 def update_progress_bar(position, n_completed, lock, progress_bars):
@@ -70,4 +71,4 @@ if __name__ == '__main__':
         df_results = pd.DataFrame(np.array(results), columns=n_values)
         mean_val = df_results[80].mean()
         print(f"Transmission rate: {rate} Mbps, 平均値 (n=80): {mean_val}")
-        df_results.to_csv(f'./out/{rate} Mbps.csv', index=False)
+        df_results.to_csv(f'./out/{rate} Mbps_line.csv', index=False)
