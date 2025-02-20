@@ -142,7 +142,7 @@ CSMA/CAでは，送信したいフレームが発生した際，まずキャリ�
   \begin{subfigure}{\columnwidth}
     \centering
     \includegraphics[width=1\columnwidth]{./assets/csma-ca-s.png}
-    \caption{CSMA/CA成功例}
+    \caption{CSMA/CA成功時}
     \label{1a}
   \end{subfigure}
 
@@ -150,7 +150,7 @@ CSMA/CAでは，送信したいフレームが発生した際，まずキャリ�
   \begin{subfigure}{\columnwidth}
     \centering
     \includegraphics[width=1\columnwidth]{./assets/csma-ca-f.png}
-    \caption{CSMA/CA失敗例}
+    \caption{CSMA/CA衝突時}
     \label{1b}
   \end{subfigure}
 
@@ -173,13 +173,13 @@ DIFSはデータフレーム送信時に適用されるIFSであり，端末は�
 
 \subsection{フレーム構成モデル化}
 
-本研究では、MAC層に着目した無線LAN通信の挙動を評価するため、UDP(User Datagram Protocol)レベルのフレーム構成をモデル化し、図\ref{packet}にその構成図を示す。
+本研究では，MAC層に着目した無線LAN通信の挙動を評価するため，UDP(User Datagram Protocol)レベルのフレーム構成をモデル化し，図\ref{packet}にその構成図を示す．
 
-無線LANフレームにはPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダー、FCS(Frame Check Sequence)というオーバーヘッドに加え，ACKフレームの送信やCSMA/CA特有のDIFS・SIFSなどのフレーム間隔，バックオフ動作も含まれる。その他にもLLC(Logical Link Control)ヘッダやIPヘッダなどが含まれるが、シミュレーションの都合でモデル化した。
+無線LANフレームにはPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダー，FCS(Frame Check Sequence)というオーバーヘッドに加え，ACKフレームの送信やCSMA/CA特有のDIFS・SIFSなどのフレーム間隔，バックオフ動作も含まれる．その他にもLLC(Logical Link Control)ヘッダやIPヘッダなどが含まれるが，シミュレーションの都合でモデル化した．
 
 % 無線LAN通信では，データ送受信時にPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダ，FCS(Frame Check Sequence)などの制御情報のオーバーヘッドに加え，ACKフレームの送信やCSMA/CA特有のDIFS・SIFSなどのフレーム間隔，バックオフ動作も必要となる．
 
-% することで、ACKフレームやCSMA/CA特有のフレーム間隔(DIFS, SIFS)、バックオフなど、MAC層における主要な動作の評価を効率良く行えるようにした。
+% することで，ACKフレームやCSMA/CA特有のフレーム間隔(DIFS, SIFS)，バックオフなど，MAC層における主要な動作の評価を効率良く行えるようにした．
 
 % 本研究では，UDP(User Datagram Protocol)レベルの無線LAN通信を再現するためにフレーム構成をモデル化した．図\ref{packet}にモデル化したフレームの構成図を示す．
 
@@ -266,8 +266,8 @@ DIFSはデータフレーム送信時に適用されるIFSであり，端末は�
 
 本研究では，クロスレイヤシミュレータにおけるCSMA/CAを中心とした無線LANシステムのモデル化とそのシミュレータを開発し，精度を検証した．
 
-今後の課題としては、連続送信ではなくポアソン分布などに従った送信間隔を導入し、より実際の通信頻度に近い状況を再現することが挙げられる。
-さらに、端末ごとに伝送速度を変えられるようにすることや、各端末やアクセスポイントの位置情報を踏まえて受信時のSNR（Signal-Noise Ratio）を考慮し、衝突時でもフレームの複合が可能となるキャプチャ効果を導入することで、より実環境に近い通信環境を再現することが挙げられる。
+今後の課題としては，連続送信ではなくポアソン分布などに従った送信間隔を導入し，より実際の通信頻度に近い状況を再現することが挙げられる．
+さらに，端末ごとに伝送速度を変えられるようにすることや，各端末やアクセスポイントの位置情報を踏まえて受信時のSNR（Signal-Noise Ratio）を考慮し，衝突時でもフレームの複合が可能となるキャプチャ効果を導入することで，より実環境に近い通信環境を再現することが挙げられる．
 
 \vspace{-0.5em}
 
