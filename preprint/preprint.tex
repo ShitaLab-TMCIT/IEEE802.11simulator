@@ -175,9 +175,9 @@ DIFSはデータフレーム送信時に適用されるIFSであり，端末は�
 
 本研究では、MAC層に着目した無線LAN通信の挙動を評価するため、UDP(User Datagram Protocol)レベルのフレーム構成をモデル化し、図\ref{packet}にその構成図を示す。
 
-無線LANフレームにはPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダー、FCS(Frame Check Sequence)に加え、LLC(Logical Link Control)ヘッダやIPヘッダなども含まれるが、シミュレーションの都合上省略し、モデル化した。
+無線LANフレームにはPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダー、FCS(Frame Check Sequence)というオーバーヘッドに加え，ACKフレームの送信やCSMA/CA特有のDIFS・SIFSなどのフレーム間隔，バックオフ動作も含まれる。その他にもLLC(Logical Link Control)ヘッダやIPヘッダなどが含まれるが、シミュレーションの都合でモデル化した。
 
-無線LAN通信では，データ送受信時にPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダ，FCS(Frame Check Sequence)などの制御情報のオーバーヘッドに加え，ACKフレームの送信やCSMA/CA特有のDIFS・SIFSなどのフレーム間隔，バックオフ動作も必要となる．
+% 無線LAN通信では，データ送受信時にPLCP(Physical Layer Convergence Protocol)プリアンブルやMACヘッダ，FCS(Frame Check Sequence)などの制御情報のオーバーヘッドに加え，ACKフレームの送信やCSMA/CA特有のDIFS・SIFSなどのフレーム間隔，バックオフ動作も必要となる．
 
 % することで、ACKフレームやCSMA/CA特有のフレーム間隔(DIFS, SIFS)、バックオフなど、MAC層における主要な動作の評価を効率良く行えるようにした。
 
