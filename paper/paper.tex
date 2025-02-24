@@ -273,7 +273,7 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
 \end{table}
 
 \clearpage
-\section{実装とシミュレーション設定}
+\section{実装}
 
 本研究では，CSMA/CA方式を用いた無線LANを再現するために，Pythonを用いてシミュレータを作成した．シミュレータには，各端末を管理する端末クラスを導入し，端末ごとのCWサイズや再送回数の管理，バックオフ時間を決定するためのスロット数の管理，再送処理などの機能を実装している．
 
@@ -299,7 +299,16 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
 
 
 
+\subsection{フローチャート}
+図\ref{flowchart}に本シミュレータのフローチャートを示す．
 
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{./assets/flowchart.drawio.png}
+  \caption{フローチャート}
+  \label{flowchart}
+\end{figure}
 
 
 
@@ -334,7 +343,7 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
   \end{tabularx}
 \end{table}
 
-\subsection{シミュレーション条件}
+\subsection{シミュレーション条件例}
 表\ref{tab:sim-param}に，本研究で用いたシミュレーション条件を示す．
 モードを選択することでそれぞれの無線LAN規格(IEEE 802.11a/b/g)に対応できるように設計した．
 
@@ -348,6 +357,7 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
     パラメータ & 値・例 \\
     \hline
     シミュレーション時間 & 60 \, \,$\mathrm{s}$\, \\
+    モード & \,``a" \\
     スロット時間 (802.11a) & \, 9 \, \,$\mathrm{\mu s}$\, \\
     DIFS (802.11a) & 34 \, \,$\mathrm{\mu s}$\, \\
     SIFS (802.11a) & 16 \, \,$\mathrm{\mu s}$\, \\
@@ -357,6 +367,58 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
   \end{tabular}
 \end{table}
 
+\clearpage
+\section{シミュレーション}
+
+\subsection{シミュレーション1}
+今回作成したシミュレータの精度を確認するために，端末数を1台から80台まで10台づつ変化させ，1000回のシミュレーションを行った．
+
+以下に本シミュレーションのパラメータと概要図を示す．
+
+\begin{table}[H]
+  \centering
+  \caption{シミュレーション1パラメータ}
+  \label{tab:sim1-param}
+  \begin{tabular}{c|@{\hspace{1.8em}}l}
+    \hline
+    パラメータ & 値・例 \\
+    \hline
+    シミュレーション時間 & 60 \, \,$\mathrm{s}$\, \\
+    モード & \,``a" \\
+    スロット時間 (802.11a) & \, 9 \, \,$\mathrm{\mu s}$\, \\
+    DIFS (802.11a) & 34 \, \,$\mathrm{\mu s}$\, \\
+    SIFS (802.11a) & 16 \, \,$\mathrm{\mu s}$\, \\
+    伝送レート & 24 \, \,Mbps\, \\
+    端末数 & 1～80 \, \,台\, \\
+    \hline
+  \end{tabular}
+\end{table}
+
+
+
+\subsection{シミュレーション2}
+MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レートに対して，端末数を1台から80台まで10台ずつ変化させ，1000回のシミュレーションを行った．
+
+以下に本シミュレーションのパラメータと概要図を示す．
+
+\begin{table}[H]
+  \centering
+  \caption{シミュレーション1パラメータ}
+  \label{tab:sim2-param}
+  \begin{tabular}{c|@{\hspace{1.8em}}l}
+    \hline
+    パラメータ & 値・例 \\
+    \hline
+    シミュレーション時間 & 60 \, \,$\mathrm{s}$\, \\
+    モード & \,``a" \\
+    スロット時間 (802.11a) & \, 9 \, \,$\mathrm{\mu s}$\, \\
+    DIFS (802.11a) & 34 \, \,$\mathrm{\mu s}$\, \\
+    SIFS (802.11a) & 16 \, \,$\mathrm{\mu s}$\, \\
+    伝送レート & 6～54 \, \,Mbps\, \\
+    端末数 & 1～80 \, \,台\, \\
+    \hline
+  \end{tabular}
+\end{table}
 
 \clearpage
 \section{評価}

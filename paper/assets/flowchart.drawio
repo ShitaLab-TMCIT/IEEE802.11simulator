@@ -1,9 +1,300 @@
-<mxfile host="Electron" modified="2025-02-22T12:30:22.447Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="7QhnHoDeA2SaSH1_2tHw" version="22.0.3" type="device">
+<mxfile host="Electron" modified="2025-02-24T16:30:46.079Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="08zZGU4AdChNBPZPdSUw" version="22.0.3" type="device">
   <diagram name="Page-1" id="uAIAA9ucGk10Nv41C3vs">
-    <mxGraphModel dx="1098" dy="1180" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+    <mxGraphModel dx="816" dy="719" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="iGh-ziniTORXBZMXKaJn-1" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.4100000000001" y="440" as="sourcePoint" />
+            <mxPoint x="599.4100000000001" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-3" value="&lt;font style=&quot;font-size: 35px;&quot;&gt;開始&lt;/font&gt;" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="360" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-4" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;端末数に応じてUserクラスのインスタンスを定義&lt;br&gt;Userクラスのインスタンスのリストを作成&lt;br&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="520" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-5" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 19px; line-height: 19px;&quot;&gt;current_time &amp;lt; duration&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 19px; line-height: 19px;&quot;&gt;durationを超えない限り&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 19px; line-height: 19px;&quot;&gt;whileで回す&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.loop_limit;whiteSpace=wrap;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="460" y="680" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-6" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.4100000000001" y="600" as="sourcePoint" />
+            <mxPoint x="599.4100000000001" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-7" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.58" y="800" as="sourcePoint" />
+            <mxPoint x="599.58" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-8" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Userクラスのインスタンスのslotsで昇順ソート&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="880" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-9" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;最小slotsと同じslotsの&lt;br&gt;Userインスタンスが&lt;br&gt;2つ以上ある？&lt;br&gt;&lt;/span&gt;" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="465" y="1040" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-10" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.71" y="960" as="sourcePoint" />
+            <mxPoint x="599.71" y="1040" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-11" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.71" y="1160" as="sourcePoint" />
+            <mxPoint x="599.71" y="1240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-12" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;NO&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="600" y="1160" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-14" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;YES&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="735" y="1070" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-16" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="735" y="1100" as="sourcePoint" />
+            <mxPoint x="1560" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-18" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;current_time +=&amp;nbsp;min_slots * slot_time&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;(バックオフ時間をインクリメント)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1240" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-19" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599" y="1320" as="sourcePoint" />
+            <mxPoint x="599" y="1400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-22" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 13px; line-height: 19px;&quot;&gt;current_time +=&amp;nbsp;送信時間 + SIFS + ACK + DIFS&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 13px; line-height: 19px;&quot;&gt;(送信時間とEIFSをインクリメント)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1600" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-23" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="1680" as="sourcePoint" />
+            <mxPoint x="600" y="1760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-25" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;total_data_transmitted += trans_data&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;(送伝送量に送信したデータ量をインクリメント)&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1760" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-26" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="1840" as="sourcePoint" />
+            <mxPoint x="600" y="1920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-27" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;送信したUserのslotsを再生成&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="2080" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="iGh-ziniTORXBZMXKaJn-28" target="iGh-ziniTORXBZMXKaJn-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-28" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;送信しなかったUserのslotsから&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;min_slotsを引く&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1920" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-29" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="598.67" y="2840" as="sourcePoint" />
+            <mxPoint x="598.67" y="2920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-32" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="2160" as="sourcePoint" />
+            <mxPoint x="600" y="2720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-60" value="伝送時間とEIFSを足して&lt;span style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;duration&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;を超える？&lt;br&gt;&lt;/span&gt;" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="465" y="1400" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-61" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.13" y="1520" as="sourcePoint" />
+            <mxPoint x="599.13" y="1600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-62" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="735" y="1459.57" as="sourcePoint" />
+            <mxPoint x="1080" y="1459.57" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-63" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;NO&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="600" y="1520" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-64" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;YES&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="735" y="1430" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-65" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1080" y="1460" as="sourcePoint" />
+            <mxPoint x="1080" y="1600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-66" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;current_time =&amp;nbsp;duration&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;(シミュレーションを終了)&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="920" y="1600" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-67" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1079.5" y="1680" as="sourcePoint" />
+            <mxPoint x="1079.5" y="1760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-68" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;total_data_transmitted += trans_data&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;(送伝送量に送信したデータ量をインクリメント)&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="920" y="1920" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-69" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;残りのデータを送れる時間(remaining_time)&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;を算出&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="920" y="1760" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-70" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1079.5" y="1840" as="sourcePoint" />
+            <mxPoint x="1079.5" y="1920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-74" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1080" y="2560" as="sourcePoint" />
+            <mxPoint x="1079.29" y="2000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-75" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1080" y="2560" as="sourcePoint" />
+            <mxPoint x="600" y="2560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-76" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="1400" y="1100" width="800" height="1540" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-13" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" as="sourcePoint" />
+            <mxPoint x="160" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-31" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="1540" as="sourcePoint" />
+            <mxPoint x="159.56999999999994" y="1380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-33" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;衝突したUserのリストを作成&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="140" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-34" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.63999999999987" y="220" as="sourcePoint" />
+            <mxPoint x="159.63999999999987" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-35" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;current_time +=&amp;nbsp;min_slots * slot_time&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;(バックオフ時間をインクリメント)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="300" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-36" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.56999999999994" y="380" as="sourcePoint" />
+            <mxPoint x="159.56999999999994" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-37" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 13px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;current_time&amp;nbsp;+=&amp;nbsp;送信時間 + SIFS + ACK + DIFS&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;(送信時間とEIFSをインクリメント)&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="660" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-39" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.56999999999994" y="740" as="sourcePoint" />
+            <mxPoint x="159.56999999999994" y="820" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-40" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;total_data_transmitted += trans_data&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;(送伝送量に送信したデータ量をインクリメント)&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="820" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-41" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.56999999999994" y="900" as="sourcePoint" />
+            <mxPoint x="159.56999999999994" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-42" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;送信しなかったUserのslotsから&lt;/div&gt;&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;min_slotsを引く&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="980" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-43" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.56999999999994" y="1060" as="sourcePoint" />
+            <mxPoint x="159.56999999999994" y="1140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-44" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;送信失敗したUserの再送回数nをインクリメント&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="1140" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-45" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.56999999999994" y="1220" as="sourcePoint" />
+            <mxPoint x="159.56999999999994" y="1300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-46" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;送信失敗したUserのslotsを再生成&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry y="1300" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-49" value="伝送時間とEIFSを足して&lt;span style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace;&quot;&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;duration&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;を超える？&lt;br&gt;&lt;/span&gt;" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry x="25" y="460" width="270" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-50" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.37999999999988" y="580" as="sourcePoint" />
+            <mxPoint x="159.37999999999988" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-51" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;NO&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry x="160" y="580" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-52" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="295" y="519.5699999999999" as="sourcePoint" />
+            <mxPoint x="640" y="519.5699999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-53" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="640" y="520" as="sourcePoint" />
+            <mxPoint x="640" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-54" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;YES&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry x="295" y="490" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-55" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; line-height: 19px;&quot;&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;current_time =&amp;nbsp;duration&lt;/div&gt;&lt;div style=&quot;line-height: 19px;&quot;&gt;(シミュレーションを終了)&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry x="480" y="660" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-56" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="640" y="1460" as="sourcePoint" />
+            <mxPoint x="639.23" y="740" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-57" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="iGh-ziniTORXBZMXKaJn-76">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="639.7399999999998" y="1460" as="sourcePoint" />
+            <mxPoint x="160" y="1460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-77" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1560" y="2640" as="sourcePoint" />
+            <mxPoint x="600" y="2640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-78" value="&lt;div style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 19px; line-height: 19px;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.loop_limit;whiteSpace=wrap;fillColor=none;rotation=-180;" vertex="1" parent="1">
+          <mxGeometry x="460" y="2720" width="280" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="iGh-ziniTORXBZMXKaJn-79" value="&lt;span style=&quot;font-size: 35px;&quot;&gt;終了&lt;/span&gt;" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="440" y="2920" width="320" height="80" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
