@@ -143,7 +143,7 @@ IEEE 802.11無線LAN(802.11 無線LAN)では、アクセス制御方式として
 
 このため、たとえ周辺に同一チャネルを利用する無線セルが存在したとしてもCSMA/CAにより、無線セル間で同一チャネルを共有して通信できる。ただし、CSMA/CAでは、偶然同時にフレームを送信してしまう可能性、すなわちフレーム同士が無線上で衝突してしまう可能性がある。衝突によって、フレームが正常に受信されなかった場合、パケットは再送されるが衝突の発生する確率は無線局数と通信トラフィック(通信情報量)の増加につれて大きくなり、スループット(データの転送能力)の低下を招く。
 
-(これいる？)
+% (これいる？)
 CSMA/CAでは、フレームの送信を試みようとするそれぞれの無線局が事前にキャリアセンス(CS : Carrier Sense)を行い無線チャネルの使用状況を確認し、他の無線局による送信が行われている間、送信を見合わせる(送信待機)ことによって、衝突を可能な限り回避する。
 
 フレームを送信していない無線局は、電波を送信していないため、Carrier(搬送波)の使用状況をSense(検出)し、一定時間未使用(Idle)であれば、Carrierを誰も使用していないと判断し、各端末がバックオフ時間としてランダムなスロット数を生成し、その時間だけ待った後に再度CSを行い、チャネルがIdleであれば送信を開始する。再度CSを行った結果、無線チャネルが使用中(Busy)であれば、フレームを送信できるまでバックオフ時間を持ち越す。複数の端末が同じスロット数となった場合には送信タイミングが同時になり、衝突が発生するため再送制御が必要となる。
@@ -290,11 +290,11 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
   \begin{tabular}{lll}
       \hline
       \textbf{カテゴリ} & \textbf{項目} & \textbf{バージョン} \\ \hline
-      OS               & Ubuntu        & 22.04 LTS \\ 
-                       & Debian        & 11 (Bullseye) \\ \hline
       Python           & Python        & 3.10.12 \\ 
-                        &               & 3.11.11 \\ \hline
+      &               & 3.11.11 \\ \hline
       ライブラリ       & random         & \\ \hline
+      OS               & Ubuntu        & 22.04 LTS \\ 
+                       & Debian        & 12 \\ \hline
   \end{tabular}
 \end{table}
 
@@ -471,8 +471,6 @@ MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レ�
 \bibitem{book2}設樂勇, 平栗健史, 谷口諒太郎, 西森健太郎, 『レイトレースを用いた3次元クロスレイヤシミュレータの開発』, 社団法人 電子情報通信学会 信学技報
 \bibitem{11std}IEEE 802.11 Standard for Local and Metropolitan Area
 Networks, “Part 11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Speciﬁcations,”  IEEE Std. 802.11, Mar. 2012.
-\bibitem{book1}西森健太郎,平栗健史,『MIMOからMassive MIMOを用いた伝送技術とクロスレイヤ評価手法』, コロナ社, 2017年.
-\bibitem{book2}設樂勇, 平栗健史, 谷口諒太郎, 西森健太郎, 『レイトレースを用いた3次元クロスレイヤシミュレータの開発』, 社団法人 電子情報通信学会 信学技報
 \end{thebibliography}
 
 \end{document}
