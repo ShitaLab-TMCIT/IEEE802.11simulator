@@ -130,31 +130,59 @@
 
 % しかし，研究開発の現場では各レイヤごとに検討が行われており，単一レイヤのみの評価では通信システム全体の性能を十分に把握することができない．
 
-これまでの研究開発の現場では物理層、MAC層、ネットワーク層といった各レイヤごとに評価検討が行われてきたが無線LAN(Local Area Network)システムの高機能化・複雑化に伴い、単一レイヤのみ性能が高くなったとしても他レイヤの性能がボトルネックとなる問題が見られるようになった。
-例えば、IEEE 802.11ac\cite{11std}では、MU-MIMO(Multi User Multiple Input Multiple Output)と呼ばれる高速化技術が使用されているが、端末数が増加すると通常のMIMOが有効となるケースもある。また、通信効率の観点から見るとMU-MIMOに比べて通常のMIMOの方が遥かに高効率である。
-これは一例だが、単一レイヤのみの性能向上では通信全体の性能を向上・評価できない場合がある。
+これまでの研究開発の現場では物理層、MAC層、ネットワーク層といった各レイヤごとに評価検討が行われてきた。しかし、無線LAN(Local Area Network)システムの高機能化・複雑化に伴い、単一レイヤのみ性能が高くなったとしても他レイヤの性能がボトルネックとなる問題が見られるようになった。
+一例として、IEEE 802.11ac\cite{11std}では、MU-MIMO(Multi User Multiple Input Multiple Output)と呼ばれる高速化技術が使用されているが、端末数が増加すると通常のMIMOが有効となるケースもある。また、通信効率の観点から見るとMU-MIMOに比べて通常のMIMOの方が遥かに高効率である。
+この例のように、単一レイヤのみの性能向上では通信全体の性能を向上・評価できない場合がある。したがって、物理層から上位層まで考慮したクロスレイヤシミュレータの開発が求められている。
 
 
+本研究では，無線通信全体の品質を総合的に評価するために，実環境の電波伝搬特性を考慮した物理層とMAC(Medium Access Control)層が連携したシミュレータの開発の一環として，IEEE 802.11規格\cite{11std}に基づくCSMA/CA(Carrier Sense Multiple Access with Collision Avoidance、衝突回避機能付きキャリア感知多重アクセス)方式を用いたMAC層の動作に則った無線LANモデルを開発し，その精度を評価することを目指す．
 
-本研究では，無線通信全体の品質を総合的に評価するために，実環境の電波伝搬特性を考慮した物理層とMAC(Medium Access Control)層が連携したシミュレータの開発の一環として，IEEE 802.11規格に基づくCSMA/CA(Carrier Sense Multiple Access with Collision Avoidance、衝突回避機能付きキャリア感知多重アクセス)方式を用いたMAC層の動作に則った無線LANモデルを開発し，その精度を評価することを目指す．
+
+% ******************************************************
+% 2. 提案するクロスレイヤシミュレータ
+% ******************************************************
+
+\clearpage
+\section{提案するクロスレイヤシミュレータ}
+\subsection{提案シミュレータの概要}
+本研究では電波伝搬特性を考慮した物理層シミュレータと連携して，MAC層の動作を評価するクロスレイヤシミュレータを提案する．
+
+\subsection{課題}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./assets/課題.png}
+  \caption{クロスレイヤシミュレータの課題}
+  \label{fig:problem}
+\end{figure}
 
 
+% ******************************************************
+% 3. 無線LAN通信モデル
+% ******************************************************
 \clearpage
 \section{無線LAN通信モデル}
 
 \subsection{CSMA/CA方式}
 
 
-IEEE 802.11無線LAN(802.11 無線LAN)では、アクセス制御方式としてCSMA/CAが採用されている。図\ref{CSMA/CA}にCSMA/CAの概要を示す。802.11 無線LANの基本アクセス手順とされている自律分散制御(DCF : Distributed Coordination Function)では、各局がチャネルの使用状況を検査して自律的にパケット(フレーム)の送信タイミングを決定するが、その時のアクセス制御プロトコルとしてCSMA/CAを使用している。
-
-このため、たとえ周辺に同一チャネルを利用する無線セルが存在したとしてもCSMA/CAにより、無線セル間で同一チャネルを共有して通信できる。ただし、CSMA/CAでは、偶然同時にフレームを送信してしまう可能性、すなわちフレーム同士が無線上で衝突してしまう可能性がある。衝突によって、フレームが正常に受信されなかった場合、パケットは再送されるが衝突の発生する確率は無線局数と通信トラフィック(通信情報量)の増加につれて大きくなり、スループット(データの転送能力)の低下を招く。
-
-% (これいる？)
-CSMA/CAでは、フレームの送信を試みようとするそれぞれの無線局が事前にキャリアセンス(CS : Carrier Sense)を行い無線チャネルの使用状況を確認し、他の無線局による送信が行われている間、送信を見合わせる(送信待機)ことによって、衝突を可能な限り回避する。
+IEEE 802.11無線LAN(802.11 無線LAN)では、アクセス制御方式としてCSMA/CAが採用されている。802.11 無線LANの基本アクセス手順とされている自律分散制御(DCF : Distributed Coordination Function)では、各局がチャネルの使用状況を検査して自律的にパケット(フレーム)の送信タイミングを決定するが、その時のアクセス制御プロトコルとしてCSMA/CAを使用している。図\ref{CSMA/CA}にCSMA/CAの概要、図\ref{fig:DCF}にDCFの概要を示す。
 
 フレームを送信していない無線局は、電波を送信していないため、Carrier(搬送波)の使用状況をSense(検出)し、一定時間未使用(Idle)であれば、Carrierを誰も使用していないと判断し、各端末がバックオフ時間としてランダムなスロット数を生成し、その時間だけ待った後に再度CSを行い、チャネルがIdleであれば送信を開始する。再度CSを行った結果、無線チャネルが使用中(Busy)であれば、フレームを送信できるまでバックオフ時間を持ち越す。複数の端末が同じスロット数となった場合には送信タイミングが同時になり、衝突が発生するため再送制御が必要となる。
 
-また、無線通信では衝突を直接検知できないため、送信したフレームに対してACK(ACKnowledgment)フレームを受信することで、フレームが正常に受信されたかを確認する。ACKフレームを受信できなかった場合、フレームは正常に受信されなかったと判断し、再送処理を行う。
+また、無線通信ではCSMA/CD(Carrier Sense Multiple Access with Collision Avoidance)のように衝突を直接検知できないため、送信したフレームに対してACK(ACKnowledgment)フレームを受信することで、フレームが正常に受信されたかを確認する。ACKフレームを受信できなかった場合、フレームは正常に受信されなかったと判断し、再送処理を行う。
+
+このため、たとえ周辺に同一チャネルを利用する無線セルが存在したとしてもCSMA/CAにより、無線セル間で同一チャネルを共有して通信できる。ただし、CSMA/CAでは、偶然同時にフレームを送信してしまう可能性、すなわちフレーム同士が無線上で衝突してしまう可能性がある。衝突によって、フレームが正常に受信されなかった場合、パケットは再送されるが、バックオフ時間の増加がオーバーヘッドの増加に繋がり、スループットが低下する。
+
+CSMA/CAでは、フレームの送信を試みようとするそれぞれの無線局が事前にキャリアセンス(CS : Carrier Sense)を行い無線チャネルの使用状況を確認し、他の無線局による送信が行われている間、送信を見合わせる(送信待機)ことによって、衝突を可能な限り回避する。図\ref{fig:CS_level}にキャリアセンスレベルの概要を示す。無線LANにおいてキャリアセンスレベルは-62\,dBmと規定されており、キャリア・センス・エリア内からの-62\,dBm以上の受信電力レベル(干渉源1)を検出した場合はチャネルが使用中(Busy)と判断し、送信を待機する。一方で-62\,dBm未満の受信電力レベルが(干渉源2)検出された場合はチャネルが未使用(Idle)と判断し、送信を開始する。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./assets/DCF.png}
+  \caption{DCF}
+  \label{fig:DCF}
+  
+\end{figure}
 
 
 \begin{figure}[H]
@@ -181,13 +209,20 @@ CSMA/CAでは、フレームの送信を試みようとするそれぞれの無�
 \end{figure}
 
 
-\clearpage
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{./assets/CS_level.png}
+  \caption{キャリアセンスレベル}
+  \label{fig:CS_level}
+\end{figure}
+
+
 \subsection{2進数バックオフ方式}
 
 無線LANシステムでは2進数バックオフ方式を採用している。バックオフ制御では、チャネルが一定時間Idleであれば、フレームを送信しようとする無線局は、規定のContention Window(CW)範囲内で乱数を発生させ、その乱数値を元にしたランダム時間(バックオフ時間)が決められる。概要を図\ref{binary-backoff}に示す。
 
 
-CWサイズは，最小値($\mathrm{CW_{min}}$)を15とし，最大値の上限($\mathrm{CW_{max}}$)を1023スロットとして衝突回数の増加に従いCWサイズは．再送回数を$n$とすると，CWサイズの最大値$\mathrm{CW}_{\max}$とスロット数$s$は
+CWサイズは，最小値($\mathrm{CW_{min}}$)を15とし，最大値の上限($\mathrm{CW_{max}}$)を1023スロットとして衝突回数の増加に従いスロット数$s$は
 
 
 \begin{align}
@@ -195,11 +230,11 @@ CWサイズは，最小値($\mathrm{CW_{min}}$)を15とし，最大値の上限(
 \end{align}
 
 \begin{align}
-  s &= \mathrm{randint}(0, \, \min(c_{\max}, \, 1023))
+  s &= \mathrm{randint}(0, \, \min(\mathrm{CW}_{\max}, \, 1023))
   \label{slot}
 \end{align}
 
-で求められる．
+で求められる．ここで、$n$は再送回数，$\mathrm{CW}_{\max}$はCWサイズの最大値である。
 
 再送を繰り返し、$\mathrm{CW_{max}}$に達したときはあらかじめパラメータで決められた最大再送回数M回となるまでCWサイズは$\mathrm{CW_{max}}$のままで再送を繰り返し、
 M回を超えると送信失敗となり、フレームが破棄される。
@@ -211,7 +246,7 @@ M回を超えると送信失敗となり、フレームが破棄される。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.93\textwidth]{./assets/CW_.png}
+  \includegraphics[width=\textwidth]{./assets/CW_.png}
   \caption{2進数バックオフ方式}
   \label{binary-backoff}
 \end{figure}
@@ -289,14 +324,18 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
 
 \subsection{動作環境}
 
+表\ref{tab:env}に本シミュレータの動作環境と使用ライブラリを示す．
+
+
+
 \begin{table}[h]
   \centering
   \caption{動作環境と使用ライブラリ}
   \label{tab:env}
-  \begin{tabular}{lll}
+  \begin{tabular}{l|l|l}
       \hline
-      \textbf{カテゴリ} & \textbf{項目} & \textbf{バージョン} \\ \hline
-      Python           & Python        & 3.10.12 \\ 
+      カテゴリ & 項目 & バージョン \\ \hline
+      Language           & Python        & 3.10.12 \\ 
       &               & 3.11.11 \\ \hline
       ライブラリ       & random         & \\ \hline
       OS               & Ubuntu        & 22.04 LTS \\ 
@@ -322,16 +361,16 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
 \subsection{\texttt{User}クラスの設計}
 本研究のシミュレータ実装では，各端末を\texttt{User}クラスとして定義し，端末ごとのCWや再送回数などを管理している．表\ref{tab:user-class}に主なメンバ変数と役割をまとめる．
 
-各端末を端末クラスのインスタンスとして定義することで、
+各端末を端末クラスのインスタンスとして定義することで、個別のバックオフ制御を実現している．新しいプロトコルや機能を追加する際にも、\texttt{User}クラスを継承することで容易に拡張できるように設計した．
 
 \begin{table}[H]
   \centering
   \caption{Userクラスのメンバ変数とメソッドの一覧}
   \label{tab:user-class}
-  \begin{tabularx}{0.5\textwidth}{lX}
+  \begin{tabularx}{0.5\textwidth}{l|X}
     \hline
     % \textbf{名称} & \textbf{説明} \\
-    名称 & 説明 \\
+    名称 & 概要 \\
     \hline
     \multicolumn{2}{l}{メンバ変数} \\
     \hline
@@ -354,6 +393,7 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
 表\ref{tab:sim-param}に，本研究で用いたシミュレーション条件を示す．
 モードを選択することでそれぞれの無線LAN規格(IEEE 802.11a/b/g)に対応できるように設計した．
 
+また、各モードに対応するパラメータはシミュレータプログラム内の辞書型で管理されているため、新しい規格やパラメータを追加する際には辞書型に追加することで容易に対応できるように設計した．
 
 \begin{table}[H]
   \centering
@@ -374,13 +414,43 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
   \end{tabular}
 \end{table}
 
+
+
 \clearpage
-\section{シミュレーション}
+\section{シミュレーション諸元}
 
+図\ref{fig:topology}に本シミュレーションのトポロジーを、表\ref{tab:sim-base-param}に本シミュレータの諸元を示す．今回のシミュレーションではプロトコルのみを評価するために全ての端末を見通し内として電力を加味せず、同一の伝送レートとして扱った。
+
+\begin{table}[H]
+  \centering
+  \caption{シミュレーション諸元}
+  \label{tab:sim-base-param}
+  \begin{tabular}{c|c}
+    \hline
+    対応規格 & IEEE 802.11a/b/g \\ 
+    \hline
+    周波数 & a \; 5.2 \, \,$\mathrm{GHz}$\, \\
+    & b/g \; 2.4 \, \,$\mathrm{GHz}$\, \\
+    \hline
+    ガードインターバル & 800 \, \,$\mathrm{ns}$\, \\
+    \hline
+    端末台数 & 1 ～ 80 \, \,台\, \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.65\textwidth]{./assets/topology.png}
+  \caption{本シミュレーションのトポロジー}
+  \label{fig:topology}
+\end{figure}
+
+\clearpage
 \subsection{シミュレーション1}
-今回作成したシミュレータの精度を確認するために，端末数を1台から80台まで10台づつ変化させ，1000回のシミュレーションを行った．
+今回作成したシミュレータの精度を確認するために，端末数を1台から80台まで10台ずつ変化させ，試行回数1000回としてシミュレーションを行い、理論値\cite{paper}との比較を行った．
 
-以下に本シミュレーションのパラメータと概要図を示す．
+以下に本シミュレーションのパラメータを示す．
 
 \begin{table}[H]
   \centering
@@ -404,13 +474,13 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
 
 
 \subsection{シミュレーション2}
-MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レートに対して，端末数を1台から80台まで10台ずつ変化させ，1000回のシミュレーションを行った．
+MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レートに対して，端末数を1台から80台まで10台ずつ変化させ，試行回数1000回としてシミュレーションを行い、24\,Mbpsの場合と同様の傾向を示すか確認を行った．
 
-以下に本シミュレーションのパラメータと概要図を示す．
+以下に本シミュレーションのパラメータを示す．
 
 \begin{table}[H]
   \centering
-  \caption{シミュレーション1パラメータ}
+  \caption{シミュレーション2パラメータ}
   \label{tab:sim2-param}
   \begin{tabular}{c|@{\hspace{1.8em}}l}
     \hline
@@ -429,26 +499,30 @@ MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レ�
 
 \clearpage
 \section{結果}
-横軸を端末数，縦軸をスループットとした1～80台まで10台ずつ1000回シミュレーションした結果の平均と理論値を図\ref{fig:simulation-result-a}に示す．
+
+\subsection{シミュレーション1}
+横軸を端末数，縦軸をスループットとした1～80台まで10台ずつ試行回数1000回24\, Mbps固定としてシミュレーションした結果の平均と理論値を図\ref{fig:simulation-result-a}に示す．
 
 
 
-理論値との差が一番大きい端末数が80台の場合でも+2.75\%程度の誤差に収まっていることが確認できる．また，端末数が増加するにつれて理論値との差が徐々に拡大することに対しては，参考とした文献\cite{paper}とのIP(Internet Protocol)レベルとUDPレベルのプロトコル上の違いからくるペイロード長の差などモデル化方法の違いが影響していると考えられる．
-以上の結果から，本研究で構築したCSMA/CAベースの無線LANモデルは，理論値に対して概ね一致し，最大でも誤差がおよそ3\%にとどまることが示された．
+
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{./assets/g3.png}
+  \includegraphics[width=0.95\textwidth]{./assets/g3.png}
   \caption{シミュレーション結果}
   \label{fig:simulation-result-a}
 \end{figure}
 
-MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レート
+
+\subsection{シミュレーション2}
+
+MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レートで1～80台まで10台ずつ試行回数1000回としてシミュレーションした結果のを図\ref{fig:simulation-result-mcs-index}に示す．
 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{./assets/mcs_index.png}
+  \includegraphics[width=0.95\textwidth]{./assets/mcs_index.png}
   \caption{シミュレーション結果}
   \label{fig:simulation-result-mcs-index}
 \end{figure}
@@ -456,6 +530,11 @@ MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レ�
 \clearpage
 \section{考察}
 
+\subsection{シミュレーション1}
+理論値との差が一番大きい端末数が80台の場合でも+2.75\%程度の誤差に収まっていることが確認できる．また，端末数が増加するにつれて理論値との差が徐々に拡大することに対しては，参考とした文献\cite{paper}とのIP(Internet Protocol)レベルとUDPレベルのプロトコル上の違いからくるペイロード長の差などモデル化方法の違いが影響していると考えられる．
+以上の結果から，本研究で構築したCSMA/CAベースの無線LANモデルは，理論値に対して概ね一致し，最大でも誤差がおよそ3\%にとどまることが示された．
+
+\subsection{シミュレーション2}
 
 \clearpage
 \section{まとめ}
@@ -473,13 +552,13 @@ MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レ�
 \clearpage
 \addcontentsline{toc}{section}{参考文献}
 \begin{thebibliography}{99}
-
+  
+  \bibitem{11std}IEEE 802.11 Standard for Local and Metropolitan Area
+  Networks, “Part 11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Speciﬁcations,”  IEEE Std. 802.11, Mar. 2012.
 \bibitem{midori}守倉正博, 久保田周治, 『インプレス標準教科書シリーズ 改訂三版802.11 高速無線LAN教科書』, 株式会社インプレスコミュニケーションズ, 2016年
 \bibitem{paper}Y. Morino, T. Hiraguri, H. Yoshino, K. Nishimori, T. Matsuda, ``A Novel Collision Avoidance Scheme Using Optimized Contention Window in Dense Wireless LAN Environments*'' \, \textit{IEICE TRANS. COMMUN.}, VOL.E99-B, NO.11 NOVEMBER 2016
 \bibitem{book1}西森健太郎,平栗健史,『MIMOからMassive MIMOを用いた伝送技術とクロスレイヤ評価手法』, コロナ社, 2017年.
 \bibitem{book2}設樂勇, 平栗健史, 谷口諒太郎, 西森健太郎, 『レイトレースを用いた3次元クロスレイヤシミュレータの開発』, 社団法人 電子情報通信学会 信学技報
-\bibitem{11std}IEEE 802.11 Standard for Local and Metropolitan Area
-Networks, “Part 11: Wireless LAN Medium Access Control (MAC) and Physical Layer (PHY) Speciﬁcations,”  IEEE Std. 802.11, Mar. 2012.
 \end{thebibliography}
 
 \end{document}
