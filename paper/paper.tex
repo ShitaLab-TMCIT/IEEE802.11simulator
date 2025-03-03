@@ -125,6 +125,7 @@
 \setcounter{page}{1}
 
 \section{はじめに}
+\subsection{背景}
 
 近年，無線通信端末の利用者が急増し，多様な場所で無線通信システムが活用されており今後も利用の拡大と機能の高度化が見込まれる．一方で，無線通信技術の進歩に伴いシステム自体はますます高機能化・複雑化している．
 
@@ -134,6 +135,7 @@
 一例として、IEEE 802.11ac\cite{11std}では、MU-MIMO(Multi User Multiple Input Multiple Output)と呼ばれる高速化技術が使用されているが、端末数が増加すると通常のMIMOが有効となるケースもある。また、通信効率の観点から見るとMU-MIMOに比べて通常のMIMOの方が遥かに高効率である。
 この例のように、単一レイヤのみの性能向上では通信全体の性能を向上・評価できない場合がある。したがって、物理層から上位層まで考慮したクロスレイヤシミュレータの開発が求められている。
 
+\subsection{目的}
 
 本研究では，無線通信全体の品質を総合的に評価するために，実環境の電波伝搬特性を考慮した物理層とMAC(Medium Access Control)層が連携したシミュレータの開発の一環として，IEEE 802.11規格\cite{11std}に基づくCSMA/CA(Carrier Sense Multiple Access with Collision Avoidance、衝突回避機能付きキャリア感知多重アクセス)方式を用いたMAC層の動作に則った無線LANモデルを開発し，その精度を評価することを目指す．
 
@@ -403,13 +405,13 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
     \hline
     パラメータ & 値・例 \\
     \hline
-    シミュレーション時間 & 60 \, \,$\mathrm{s}$\, \\
+    シミュレーション時間 & 60  \,$\mathrm{s}$\, \\
     モード & \, \,  a \\
-    スロット時間 (802.11a) & \, 9 \, \,$\mathrm{\mu s}$\, \\
-    DIFS (802.11a) & 34 \, \,$\mathrm{\mu s}$\, \\
-    SIFS (802.11a) & 16 \, \,$\mathrm{\mu s}$\, \\
-    伝送レート & 24 \, \,Mbps\, \\
-    端末数 & 80 \, \,台\, \\
+    スロット時間 (802.11a) & \, 9  \,$\mathrm{\mu s}$\, \\
+    DIFS (802.11a) & 34 \, $\mathrm{\mu s}$\, \\
+    SIFS (802.11a) & 16 \, $\mathrm{\mu s}$\, \\
+    伝送レート & 24 \, Mbps\, \\
+    端末数 & 80 \, 台\, \\
     \hline
   \end{tabular}
 \end{table}
@@ -429,12 +431,12 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
     \hline
     対応規格 & IEEE 802.11a/b/g \\ 
     \hline
-    周波数 & a \; 5.2 \, \,$\mathrm{GHz}$\, \\
-    & b/g \; 2.4 \, \,$\mathrm{GHz}$\, \\
+    周波数 & a : 5.2  \,$\mathrm{GHz}$\, \\
+    & b/g : 2.4  \,$\mathrm{GHz}$\, \\
     \hline
-    ガードインターバル & 800 \, \,$\mathrm{ns}$\, \\
+    ガードインターバル & 800  \,$\mathrm{ns}$\, \\
     \hline
-    端末台数 & 1 ～ 80 \, \,台\, \\
+    端末台数 & 1 ～ 80 \, 台\, \\
     \hline
   \end{tabular}
 \end{table}
@@ -460,13 +462,13 @@ MCS(Modulation and Coding Scheme) Indexは、変調方式と符号化率の組�
     \hline
     パラメータ & 値・例 \\
     \hline
-    シミュレーション時間 & 60 \, \,$\mathrm{s}$\, \\
+    シミュレーション時間 & 60 \, $\mathrm{s}$\, \\
     モード & \, \,  a \\
-    スロット時間 (802.11a) & \, 9 \, \,$\mathrm{\mu s}$\, \\
-    DIFS (802.11a) & 34 \, \,$\mathrm{\mu s}$\, \\
-    SIFS (802.11a) & 16 \, \,$\mathrm{\mu s}$\, \\
-    伝送レート & 24 \, \,Mbps\, \\
-    端末数 & 1～80 \, \,台\, \\
+    スロット時間 (802.11a) & \, 9  \,$\mathrm{\mu s}$\, \\
+    DIFS (802.11a) & 34 \, $\mathrm{\mu s}$\, \\
+    SIFS (802.11a) & 16 \, $\mathrm{\mu s}$\, \\
+    伝送レート & 24 \, Mbps\, \\
+    端末数 & 1～80 \, 台\, \\
     \hline
   \end{tabular}
 \end{table}
@@ -486,13 +488,13 @@ MCS Indexで定義されているIEEE 802.11aに対応する全ての伝送レ�
     \hline
     パラメータ & 値・例 \\
     \hline
-    シミュレーション時間 & 60 \, \,$\mathrm{s}$\, \\
+    シミュレーション時間 & 60 \, $\mathrm{s}$\, \\
     モード & \, \,  a \\
-    スロット時間 (802.11a) & \, 9 \, \,$\mathrm{\mu s}$\, \\
-    DIFS (802.11a) & 34 \, \,$\mathrm{\mu s}$\, \\
-    SIFS (802.11a) & 16 \, \,$\mathrm{\mu s}$\, \\
-    伝送レート & 6～54 \, \,Mbps\, \\
-    端末数 & 1～80 \, \,台\, \\
+    スロット時間 (802.11a) & \, 9 \, $\mathrm{\mu s}$\, \\
+    DIFS (802.11a) & 34 \, $\mathrm{\mu s}$\, \\
+    SIFS (802.11a) & 16 \, $\mathrm{\mu s}$\, \\
+    伝送レート & 6～54 \, Mbps\, \\
+    端末数 & 1～80 \, 台\, \\
     \hline
   \end{tabular}
 \end{table}
