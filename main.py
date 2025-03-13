@@ -8,7 +8,7 @@ PRINT_MODE = {
     3: "No Output"
 }
 
-# モードによって辞書型で管理してる
+# 規格によって辞書型で管理してる
 TRANS_MODE = {
     "a": {
         "SLOT_TIME": 9,
@@ -55,6 +55,10 @@ ACK_TIME = {
 }
 
 # Userクラス
+# 各Userにパラメータを追加したかったらここに追加する
+# 距離だったらself.distance = distanceとか
+# 伝送レートだったらself.rate = rateとか
+# 計算するときにuser.rateとかでアクセスできる
 class User:
     def __init__(self, id, n=0, seed=None):
         # ID
@@ -68,15 +72,18 @@ class User:
         # 送信したデータ量
         self.data_transmitted = 0
 
+    # スロット生成
     def calc_slots(self):
         cw_max = 2 ** (4 + self.num_re_trans) - 1
         self.slots = random.randint(0, min(cw_max, 1023))
         return self.slots
 
+    # 再送処理
     def re_transmit(self):
         self.num_re_trans += 1
         self.slots = self.calc_slots()
 
+    # スロットリセット
     def reset_slots(self):
         self.num_re_trans = 0
         self.slots = self.calc_slots()
@@ -108,6 +115,7 @@ def calc_ifs_time(ifs, mode):
 
 # シミュレーション関数
 def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
+    # 初期化と宣言
     current_time = 0
     collision_count = 0
     trans_data = 1472 * 8 # UDP level
@@ -115,6 +123,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     total_data_transmitted = 0
     trans_num = 0
 
+    # プリアンブル等変えたかったらここ()
     preamble_time = 20 / (10**6)
     FCS_time = 4 * 8 / (rate * 10**6)
     ACK_time = 28 / 10**6
@@ -127,19 +136,25 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
     trans_time = calc_trans_time(trans_data, rate)
 
     while current_time < duration:
+        # スロット数でソート
         cw_time_list.sort(key=lambda x: x[1])
 
+        # 最小スロット数のUserを取得
         min_user = min(users, key=lambda u: u.slots)
+
+        # 最小スロット数と同じスロット数のUserを取得(衝突を検知)
         collisions = sorted([user for user in users if (
             user.slots == min_user.slots and user.id != min_user.id)], key=lambda u: u.id)
         if collisions:
             collisions.append(min_user)
+        # 衝突したUserのIDを取得
         collisions_ids = [user.id for user in collisions]
 
 
         # print(cw_time_list)
         # print('collisions_ids: ', collisions_ids)
 
+        # 最小スロット数のUserのバックオフ時間を計算
         cw_time = calc_cw_time(min_user.slots, mode)
         min_slots = min_user.slots
 
@@ -175,6 +190,7 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
 
         # 成功時処理
         else:
+            # 送信回数を増やす
             trans_num += 1
             min_user.num_transmitted += 1
 
@@ -187,20 +203,20 @@ def simulate_transmission(users: User, duration: int, rate, output_mode, mode):
             # 超えるなら
             else:
                 # print(f"current : {current_time}")
-                
+
                 current_time = duration
                 remaining_time = duration -  (cw_time + preamble_time + MAC_header_time + current_time)
-                
+
                 # print(f"remaining : {remaining_time}")
 
                 # 残り伝送時間内にデータフレームを送る時間があるなら`remaining_time`がプラス
                 if 0 < remaining_time:
-                
+
                     transmitted_data = remaining_time * rate * 10**6
 
                     total_data_transmitted += transmitted_data
                     min_user.data_transmitted = transmitted_data
-                
+
 
             if output_mode == PRINT_MODE[1]:
                 print(
@@ -231,5 +247,6 @@ if __name__ == "__main__":
     # python main.pyで実行すると以下が実行される
     n = 80
 
+    # Userのリスト(users)を作成シミュレータに渡す
     users = create_users(n)
     simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='a')
