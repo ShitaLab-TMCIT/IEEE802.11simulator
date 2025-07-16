@@ -1,4 +1,5 @@
 import random
+import time
 
 # 出力形式あんま使ってない
 PRINT_MODE = {
@@ -249,4 +250,9 @@ if __name__ == "__main__":
 
     # Userのリスト(users)を作成シミュレータに渡す
     users = create_users(n)
-    simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[2], mode='a')
+    results = []
+    start_time = time.time()
+    for i in range(100):
+        results.append(simulate_transmission(users, 60, 24, output_mode=PRINT_MODE[3], mode='a'))
+    end_time = time.time()
+    print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
