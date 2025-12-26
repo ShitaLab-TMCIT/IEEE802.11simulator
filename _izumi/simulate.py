@@ -242,6 +242,7 @@ Simulator Config
         Returns:
             typing.Dict[int, User]: ユーザーのIDをキーとするユーザーの状態を格納した辞書
         """
+        success = 0
 
         duration *= 10**6  # マイクロ秒単位に変換
 
@@ -274,6 +275,7 @@ Simulator Config
                 if (current_time < duration):
                     users[0].data_transmitted += self.__Packet_thorough
                     total_data_transmitted += self.__Packet_thorough
+                    success += 1
                 else:
                     break
 
@@ -282,20 +284,21 @@ Simulator Config
 
                 users[0].reset_slots()
 
+        print('success:',success)
         return float(total_data_transmitted / duration)
 
 if __name__ == "__main__":
     # python main.pyで実行すると以下が実行される
-    n = 80
+    n = 10
 
     # Userのリスト(users)を作成シミュレータに渡す
     users = [User(i) for i in range(n)]
 
     simulator = Simulator(IEEE_Standard.a)
-    simulator.SetConfig(IEEE_Standard.a, TrafficLevel.UDP, 24)
+    simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, 24)
     results = []
     start_time = time.time()
-    for i in range(100):
-        results.append(simulator.Simulate(users, 60, seed=42))
+    for i in range(10):
+        results.append(simulator.Simulate(users, 1, seed=42))
     end_time = time.time()
     print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
