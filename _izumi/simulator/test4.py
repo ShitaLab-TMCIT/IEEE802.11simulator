@@ -115,6 +115,5 @@ def auto(count,duration,num,version):
 
 if __name__ == "__main__":   # ← ★これが絶対に必要
     for i in [2,5,10,20,30,40,50,60,70,80,90,100]:
-        if i!=70:continue
         auto(10,1000000,i,IEEE802dot11Version.a)
         print('COMPLETE :',i)

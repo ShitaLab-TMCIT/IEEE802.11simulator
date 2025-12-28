@@ -1,6 +1,7 @@
 import os,json,glob
 
 all_results = glob.glob(os.path.join(os.path.dirname(__file__),'result', 'all_result*'))
+all_results = [i for i in all_results if len(fn:=(os.path.basename(i).replace('.json','').replace('all_result','')))>0 and int(fn)>=20251228205659]
 all_results.sort(key=lambda x: int(os.path.basename(x).replace('.json','').replace('all_result','')))
 
 all_result = {}
