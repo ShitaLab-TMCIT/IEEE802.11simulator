@@ -67,14 +67,6 @@ class SimEvent:
         else:
             return []
 
-
-class NullEvent(SimEvent):
-    def __init__(self):
-        super().__init__(-1, None)
-        self._target = EventTarget.Null
-        self._targets = []
-    pass
-
 class ResetEvent(SimEvent):
     def __init__(self, time, author):
         super().__init__(time, author)

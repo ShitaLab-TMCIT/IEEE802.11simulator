@@ -6,6 +6,8 @@ import copy
 import time
 import numpy
 
+Rand = random.Random(0)
+
 class IEEE_Standard(enum.Enum) :
     """
     IEEE 802.11の規格を表す列挙型
@@ -104,17 +106,17 @@ class User:
 
     # スロット生成
     def calc_slots(self) -> int :
-        return random.randint(0,self.cw_list[self.num_re_trans])
+        return Rand.randint(0,self.cw_list[self.num_re_trans])
 
     # 再送処理
     def re_transmit(self):
         self.num_re_trans = min(self.num_re_trans+1, 6)
-        self.slots = random.randint(0,self.cw_list[self.num_re_trans])
+        self.slots = Rand.randint(0,self.cw_list[self.num_re_trans])
 
     # スロットリセット
     def reset_slots(self):
         self.num_re_trans = 0
-        self.slots = random.randint(0,self.cw_list[self.num_re_trans])
+        self.slots = Rand.randint(0,self.cw_list[self.num_re_trans])
 
 
 
@@ -285,20 +287,47 @@ Simulator Config
                 users[0].reset_slots()
 
         print('success:',success)
-        return float(total_data_transmitted / duration)
+        return success,float(total_data_transmitted / duration)
 
 if __name__ == "__main__":
     # python main.pyで実行すると以下が実行される
     n = 10
 
     # Userのリスト(users)を作成シミュレータに渡す
-    users = [User(i) for i in range(n)]
+    
+    all_result = {}
+    seed = 0
 
-    simulator = Simulator(IEEE_Standard.a)
-    simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, 24)
-    results = []
-    start_time = time.time()
-    for i in range(10):
-        results.append(simulator.Simulate(users, 1, seed=42))
-    end_time = time.time()
-    print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
+    for num in [2,5,10,20,30,40,50,60,70,80,90,100]:
+        all_result[num] = {}
+
+        users = [User(i) for i in range(num)]
+        for rate in [6,9,12,18,24,36,48,54]:
+            all_result[num][rate] = []
+            simulator = Simulator(IEEE_Standard.a)
+
+            results = []
+            for i in range(10):
+                Rand.seed(seed)
+                start_time = time.time()
+                simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, rate)
+                su, ip_data = simulator.Simulate(users, 1, seed=42)
+                results.append(ip_data)
+
+                Rand.seed(seed)
+                simulator.SetConfig(IEEE_Standard.a, TrafficLevel.UDP, rate)
+                su, udp_data = simulator.Simulate(users, 1, seed=42)
+                end_time = time.time()
+                seed += 1
+            
+                all_result[num][rate].append( {
+                    'lap_time' : (end_time-start_time)/2,
+                    'IP' : ip_data,
+                    'UDP' : udp_data,
+                    'success' : su
+                })
+            print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
+    
+    import os,json,datetime
+    with open(os.path.join(os.path.dirname(__file__),f'result{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.json'),'w') as f:
+        json.dump(all_result,f,indent=4)

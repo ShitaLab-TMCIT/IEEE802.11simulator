@@ -235,7 +235,7 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
 
     def addResendCount(self):
         self._resend = max(self.version.cwMin,self._resend+1)
-        if (self._resend >= self.version.cwMax):self.ResetResendCount()
+        if (self._resend >= self.version.cwMax):self._resend = self.version.cwMax#self.ResetResendCount()
 
 
     def Event(self, event:SimEvent, obj:DeviceController):
