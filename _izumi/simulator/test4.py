@@ -43,10 +43,11 @@ def run_one(rate_val,ver, seed, duration, num):
             udp += sum(data.get('UDP', 0) for data in dev.sentData)
             success += len(dev.sentData)
 
+    print('complete :',rate_val,lap,ip,udp,success)
     return rate_val, lap, ip, udp, success
 
 
-if __name__ == "__main__":   # ← ★これが絶対に必要
+def auto(count,duration,num,version):
 
     rates = [
         TransRate.r6Mbps,
@@ -59,10 +60,10 @@ if __name__ == "__main__":   # ← ★これが絶対に必要
         TransRate.r54Mbps
     ]
 
-    count = 10
-    duration = 60*1_000_000
-    num = 70
-    version = IEEE802dot11Version.a
+    # count = 10
+    # duration = 1*1_000_000
+    # num = 70
+    # version = IEEE802dot11Version.a
 
     tasks = []
     seed = 0
@@ -103,6 +104,16 @@ if __name__ == "__main__":   # ← ★これが絶対に必要
     }
 
     import os, json, datetime
-    path = os.path.join(os.path.dirname(__file__),'result',f'test{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+    path = os.path.join(os.path.dirname(__file__),'result',f'result{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
     with open(path,'w',encoding='utf-8') as f:
         json.dump(d,f,indent=4,ensure_ascii=False)
+    path = os.path.join(os.path.dirname(__file__),'result',f'all_result{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+    with open(path,'w',encoding='utf-8') as f:
+        json.dump(all_result,f,indent=4,ensure_ascii=False)
+
+
+
+if __name__ == "__main__":   # ← ★これが絶対に必要
+    for i in [2,5,10,20,30,40,50,60,70,80,90,100]:
+        auto(10,1000000,i,IEEE802dot11Version.a)
+        print('COMPLETE :',i)
