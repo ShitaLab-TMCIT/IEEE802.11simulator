@@ -65,7 +65,7 @@ def export_throughput_csv(
 def export_average_throughput_csv(result_old, result_new, root_dir):
     os.makedirs(root_dir, exist_ok=True)
 
-    avg_csv_path = os.path.join(root_dir, "throughput_average_compare.csv")
+    avg_csv_path = os.path.join(root_dir, "throughput_average_compare0.csv")
 
     with open(avg_csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
