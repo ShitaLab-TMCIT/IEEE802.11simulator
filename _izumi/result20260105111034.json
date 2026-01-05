@@ -1,0 +1,16 @@
+{
+    "70": {
+        "24": [
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}",
+            "{'mode': <IEEE_Standard.a: (1,)>, 'level': <TrafficLevel.IP: (1,)>, 'rate': 24, '_Simulator__Symbol_bit': 96, '_Simulator__SlotTime': 9, '_Simulator__Packet_thorough': 12000, '_Simulator__PLCP_frame_length': 20, '_Simulator__Total_Frame_length': 614, '_Simulator__Backoff_count': 1}"
+        ]
+    }
+}

@@ -193,10 +193,9 @@ class CSMACA_DeviceController(DeviceController):
         return self._state
 
     @state.setter
+    @DeviceController.simPropertySetter
     def state(self,value):
-        def _(dev:CSMACA_DeviceController):
-            dev._state = value
-        self._queue.append(_)
+        self._state = value
 
 
     def Reset(self):
@@ -228,15 +227,13 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
 
 
     def generateSlot(self):
-        self._slot = self.Sim.Rand.randint(0,int(math.pow(self.resend,2)))
+        self._slot = self.Sim.Rand.randint(0,int(math.pow(2,self.resend)))
 
     def ResetResendCount(self):
         self._resend = self.version.cwMin
 
     def addResendCount(self):
-        self._resend = max(self.version.cwMin,self._resend+1)
-        if (self._resend >= self.version.cwMax):self._resend = self.version.cwMax#self.ResetResendCount()
-
+        self._resend = min(self.version.cwMax,max(self.version.cwMin,self._resend+1))
 
     def Event(self, event:SimEvent, obj:DeviceController):
         super().Event(event,obj)
@@ -474,7 +471,7 @@ if __name__ == '__main__':
     # 端末の作成
     duration = 100000 # シミュレーション時間(us)
     count = 2 # 試行回数
-    num = 10
+    num = 70
     s = 0
 
     for i in range(num):
@@ -484,23 +481,19 @@ if __name__ == '__main__':
         sta._name = f'STA{i}'
         Simulator.Instance.devices.append(sta)
 
-    # Simulator.Instance.Simulate(1000000)
-    # print(sum([sum([j.get('IP',0) for j in i.sentData]) for i in Simulator.Instance.devices]))
-
     L = []
     L0 = 0
     all_result = {}
 
-
     for rate in [
-            TransRate.r6Mbps,
-            TransRate.r9Mbps,
-            TransRate.r12Mbps,
-            TransRate.r18Mbps,
+            # TransRate.r6Mbps,
+            # TransRate.r9Mbps,
+            # TransRate.r12Mbps,
+            # TransRate.r18Mbps,
             TransRate.r24Mbps,
-            TransRate.r36Mbps,
-            TransRate.r48Mbps,
-            TransRate.r54Mbps
+            # TransRate.r36Mbps,
+            # TransRate.r48Mbps,
+            # TransRate.r54Mbps
             ]: # すべてのレートで試行
 
         for dev in Simulator.Instance.devices:
@@ -514,7 +507,7 @@ if __name__ == '__main__':
         Lap = []
         for n in range(count):
             Simulator.Instance.SetRandomSeed(s)
-            s+=1
+            #s+=1
             start = time.time()
             Simulator.Instance.Simulate(duration)
             lap = time.time() - start

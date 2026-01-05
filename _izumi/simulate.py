@@ -104,6 +104,12 @@ class User:
         # 送信したデータ量
         self.data_transmitted : int = 0
 
+    def reset(self):
+        self.num_re_trans = 0
+        self.slots = 0
+        self.num_transmitted = 0
+        self.data_transmitted = 0
+
     # スロット生成
     def calc_slots(self) -> int :
         return Rand.randint(0,self.cw_list[self.num_re_trans])
@@ -291,18 +297,18 @@ Simulator Config
 
 if __name__ == "__main__":
     # python main.pyで実行すると以下が実行される
-    n = 10
+    n = 70
 
     # Userのリスト(users)を作成シミュレータに渡す
-    
+
     all_result = {}
     seed = 0
 
-    for num in [2,5,10,20,30,40,50,60,70,80,90,100]:
+    for num in [70]:
         all_result[num] = {}
 
         users = [User(i) for i in range(num)]
-        for rate in [6,9,12,18,24,36,48,54]:
+        for rate in [24]:
             all_result[num][rate] = []
             simulator = Simulator(IEEE_Standard.a)
 
@@ -311,23 +317,55 @@ if __name__ == "__main__":
                 Rand.seed(seed)
                 start_time = time.time()
                 simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, rate)
-                su, ip_data = simulator.Simulate(users, 1, seed=42)
+                all_result[num][rate].append(str(simulator.__dict__))
+                su, ip_data = simulator.Simulate(users, 0.1, seed=42)
                 results.append(ip_data)
 
                 Rand.seed(seed)
                 simulator.SetConfig(IEEE_Standard.a, TrafficLevel.UDP, rate)
-                su, udp_data = simulator.Simulate(users, 1, seed=42)
+                su0, udp_data = simulator.Simulate(users, 0.1, seed=42)
                 end_time = time.time()
-                seed += 1
-            
-                all_result[num][rate].append( {
-                    'lap_time' : (end_time-start_time)/2,
-                    'IP' : ip_data,
-                    'UDP' : udp_data,
-                    'success' : su
-                })
+                seed += 0
+
+                # all_result[num][rate].append( {
+                #     'lap_time' : (end_time-start_time)/2,
+                #     'IP' : ip_data,
+                #     'UDP' : udp_data,
+                #     'success' : su
+                # })
             print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
-    
+
+
+    # for num in [2,5,10,20,30,40,50,60,70,80,90,100]:
+    #     all_result[num] = {}
+
+    #     users = [User(i) for i in range(num)]
+    #     for rate in [6,9,12,18,24,36,48,54]:
+    #         all_result[num][rate] = []
+    #         simulator = Simulator(IEEE_Standard.a)
+
+    #         results = []
+    #         for i in range(10):
+    #             Rand.seed(seed)
+    #             start_time = time.time()
+    #             simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, rate)
+    #             su, ip_data = simulator.Simulate(users, 1, seed=42)
+    #             results.append(ip_data)
+
+    #             Rand.seed(seed)
+    #             simulator.SetConfig(IEEE_Standard.a, TrafficLevel.UDP, rate)
+    #             su, udp_data = simulator.Simulate(users, 1, seed=42)
+    #             end_time = time.time()
+    #             seed += 1
+
+    #             all_result[num][rate].append( {
+    #                 'lap_time' : (end_time-start_time)/2,
+    #                 'IP' : ip_data,
+    #                 'UDP' : udp_data,
+    #                 'success' : su
+    #             })
+    #         print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
+
     import os,json,datetime
     with open(os.path.join(os.path.dirname(__file__),f'result{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.json'),'w') as f:
         json.dump(all_result,f,indent=4)

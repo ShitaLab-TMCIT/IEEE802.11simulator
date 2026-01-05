@@ -28,8 +28,14 @@ class DeviceController:
         self._name      : str = ''
         self._position  : simc.Vector3 = simc.Vector3(0.0,0.0,0.0)
         self._nextEvent : sime.SimEvent = sime.SimEvent.Null
-        self._queue     : typing.List[typing.Callable[['DeviceController'],None]] = []
+        self._queue     : typing.List[typing.Callable[[],None]] = []
         self._transData : trad.TransData = trad.TransData.Null
+
+    def simPropertySetter(func):
+        def _(self:'DeviceController',*args,**kwargs):
+            self._queue.append(lambda:func(self,*args,**kwargs))
+        return _
+
 
 
     @property
@@ -56,12 +62,10 @@ class DeviceController:
         return self._transData
 
     @transData.setter
+    @simPropertySetter
     def transData(self,value:'trad.TransData'):
-        def _(dev:DeviceController):
-            dev._transData = value
-            dev.BookEvent(sime.PhysicalEvent)
-
-        self._queue.append(_)
+        self._transData = value
+        self.BookEvent(sime.PhysicalEvent)
 
 
     def Event(self, event:'sime.SimEvent', obj:'DeviceController'):
@@ -75,7 +79,7 @@ class DeviceController:
 
     def Update(self):
         while (len(self._queue)>0):
-            self._queue.pop()(self)
+            self._queue.pop()()
 
     def Reset(self):
         self._nextEvent = sime.SimEvent.Null

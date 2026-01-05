@@ -1,0 +1,14 @@
+{
+    "version": "IEEE802dot11Version.a",
+    "duration": 100000,
+    "device": 70,
+    "count": 2,
+    "result": {
+        "24": {
+            "lap_time": 8.682009100914001,
+            "IP": 4.56,
+            "UDP": 4.47488,
+            "success": 38.0
+        }
+    }
+}
