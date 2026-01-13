@@ -298,6 +298,8 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
 
         target.receivedData.append(self._holdData)
         target.sentData.append(self._receivingData)
+        self.Sim.SetProperty('trans_count',self.Sim.GetProperty('trans_count',0)+1)
+
 
         self._holdData = TransData.Null
         self._receivingData = TransData.Null
@@ -478,7 +480,7 @@ if __name__ == '__main__':
     duration = 200000 # シミュレーション時間(us)
     count = 1 # 試行回数
     num = 70
-    s = 5
+    s = 10
 
     for i in range(num):
         sta = CSMACA_STA_Controller()

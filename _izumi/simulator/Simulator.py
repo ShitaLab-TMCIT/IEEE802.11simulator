@@ -92,11 +92,21 @@ class Simulator:
         :type duration: int
         """
 
+        time_step = 10000
+        lap = 0
+        latest_time = time.time()
+        su = 0
+
         self._time = 0
         self._eventQueue.clear()
         self._TriggerEvent(sime.ResetEvent(self.time,self.SimDev))
 
         while (self._time < duration):
+            if self.time >= lap:
+                print(f'---------------------------------\nLAP         : {lap}\nlap_time    : {time.time()-latest_time}\ntrans_count : {self.GetProperty("trans_count",0)-su}')
+                latest_time = time.time()
+                lap += time_step
+                su = self.GetProperty("trans_count",0)
             self._SimulateOne()
 
 
@@ -161,8 +171,15 @@ class Simulator:
                 #self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
         self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
+        is_phy = False
         while (len(self._eventQueue)>0):
-            self._TriggerEvent(self._eventQueue.pop(0))
+            event = self._eventQueue.pop(0)
+            if (isinstance(event,sime.PhysicalEvent)):
+                if (not is_phy):
+                    is_phy = True
+                    self._TriggerEvent(event)
+            else:
+                self._TriggerEvent(event)
             self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
 
