@@ -39,8 +39,8 @@ def run_one(rate_val,ver, seed, duration, num):
     ip = udp = success = 0
     for dev in Simulator.Instance.devices:
         if isinstance(dev, CSMACA_DeviceController):
-            ip += sum(data.get('IP', 0) for data in dev.sentData)
-            udp += sum(data.get('UDP', 0) for data in dev.sentData)
+            ip += sum(data.data.get('IP', 0) for data in dev.sentData)
+            udp += sum(data.data.get('UDP', 0) for data in dev.sentData)
             success += len(dev.sentData)
 
     print('complete :',rate_val,lap,ip,udp,success)
@@ -66,7 +66,7 @@ def auto(count,duration,num,version):
     # version = IEEE802dot11Version.a
 
     tasks = []
-    seed = 0
+    seed = 10000
     for rate in rates:
         for _ in range(count):
             tasks.append((int(rate), version.value, seed, duration, num))
@@ -111,9 +111,23 @@ def auto(count,duration,num,version):
     with open(path,'w',encoding='utf-8') as f:
         json.dump(all_result,f,indent=4,ensure_ascii=False)
 
+    return d
+
 
 
 if __name__ == "__main__":   # ← ★これが絶対に必要
+    D = {
+        'version' : str(IEEE802dot11Version.a),
+        'duration' : 1000000,
+        'count' : 10,
+        'result' : {}
+    }
     for i in [2,5,10,20,30,40,50,60,70,80,90,100]:
-        auto(10,1000000,i,IEEE802dot11Version.a)
+        D['result'][str(i)] = auto(1,10000000,i,IEEE802dot11Version.a)['result']
         print('COMPLETE :',i)
+    
+    import os, json, datetime
+    path = os.path.join(os.path.dirname(__file__),'result',f'perfect_result{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+    with open(path,'w',encoding='utf-8') as f:
+        json.dump(D,f,indent=4,ensure_ascii=False)
+

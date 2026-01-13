@@ -102,4 +102,14 @@ class TransData:
             'TCP' : self._data.get('TCP',0),
             'UDP' : self._data.get('UDP',0)
         }
+    
+    def copy(self) -> 'TransData':
+        return TransData(
+            self._author,
+            self._target,
+            self._startTime,
+            self._endTime,
+            self._power,
+            self._data
+        )
 

@@ -92,21 +92,12 @@ class Simulator:
         :type duration: int
         """
 
-        time_step = 10000
-        lap = 0
-        latest_time = time.time()
-        su = 0
-
         self._time = 0
         self._eventQueue.clear()
         self._TriggerEvent(sime.ResetEvent(self.time,self.SimDev))
+        self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
         while (self._time < duration):
-            if self.time >= lap:
-                print(f'---------------------------------\nLAP         : {lap}\nlap_time    : {time.time()-latest_time}\ntrans_count : {self.GetProperty("trans_count",0)-su}')
-                latest_time = time.time()
-                lap += time_step
-                su = self.GetProperty("trans_count",0)
             self._SimulateOne()
 
 
@@ -148,9 +139,10 @@ class Simulator:
 
 
     def _TriggerEvent (self,event:'sime.SimEvent') -> None:
+        #print(self.time,event.author.name,event,event.target)
         for device in event.get_target():
             device.Event(event,device)
-        #print(self.time,event.author.name,event)
+        
 
     def _SimulateOne (self) -> None:
         t = self.time
@@ -158,33 +150,35 @@ class Simulator:
         nextEvent = (sorted(
             [dev.nextEvent for dev in self._devices if dev.nextEvent.time >= 0],
             key = lambda e: e.time
-            )+[sime.PhysicalEvent(self.time,self.SimDev)])
+            )+[sime.UpdateEvent(self.time,self.SimDev)])
         self._time = max(nextEvent[0].time,self.time)
 
-        for i in nextEvent:
+        #print('nextEvent')
+        for i in nextEvent[:-1]:
             if (self._time >= i.time):
                 self._TriggerEvent(i)
-                update = sime.UpdateEvent(self.time,self.SimDev)
-                update.target = sime.EventTarget.Custom
-                update.targets = i.get_target()
-                self._TriggerEvent(update)
+                # update = sime.UpdateEvent(self.time,self.SimDev)
+                # update.target = sime.EventTarget.Custom
+                # update.targets = i.get_target()
+                # self._TriggerEvent(update)
                 #self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
+            else:
+                break
+        
+        #print('nextEvent_finish')
         self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
-        is_phy = False
         while (len(self._eventQueue)>0):
+            #print('queue')
             event = self._eventQueue.pop(0)
-            if (isinstance(event,sime.PhysicalEvent)):
-                if (not is_phy):
-                    is_phy = True
-                    self._TriggerEvent(event)
-            else:
-                self._TriggerEvent(event)
+            self._eventQueue.clear()
+            self._TriggerEvent(event)
             self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
 
         if (t == self.time):
             pass
+            #raise Exception
 
 
 # if __name__ == '__main__':

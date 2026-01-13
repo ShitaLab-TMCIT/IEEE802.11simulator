@@ -64,6 +64,7 @@ class DeviceController:
     @transData.setter
     @simPropertySetter
     def transData(self,value:'trad.TransData'):
+        #print(self.name,value)
         self._transData = value
         self.BookEvent(sime.PhysicalEvent)
 

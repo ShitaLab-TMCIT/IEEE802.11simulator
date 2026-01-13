@@ -34,14 +34,15 @@ class PhysicalManager:
         )
 
     def Sense(self,dev:'devc.DeviceController') -> 'trad.TransData':
-        l : typing.List[trad.TransData] = []
-        for i in self.Sim.devices:
-            if (i is dev):
-                continue
-            elif (i.transData is trad.TransData.Null):
-                continue
-            else:
-                l.append(i.transData)
+        #print(f'\033[1;33mPhysicalManager.Sense : {dev.name}\033[0m')
+        l : typing.List[trad.TransData] = [i.transData for i in self.Sim.devices if i.transData is not trad.TransData.Null]
+        # for i in self.Sim.devices:
+        #     if (i is dev):
+        #         continue
+        #     elif (i.transData is trad.TransData.Null):
+        #         continue
+        #     else:
+        #         l.append(i.transData)
 
         if (len(l)>1):
             return TransData.TransData(
@@ -51,7 +52,7 @@ class PhysicalManager:
                 {}
             )
         elif (len(l)==1):
-            data = copy.deepcopy(l[0])
+            data = l[0].copy()
             data._power = 100
             return data
         else:
