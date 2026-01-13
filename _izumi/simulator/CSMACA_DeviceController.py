@@ -167,6 +167,8 @@ class CSMACA_DeviceController(DeviceController):
         self._sentData : typing.List[TransData] = []
         self._receivedData : typing.List[TransData] = []
 
+    _log = []
+
     @property
     def version(self) -> IEEE802dot11Version:
         return Simulator.Instance.GetProperty('version',IEEE802dot11Version.a)
@@ -194,7 +196,10 @@ class CSMACA_DeviceController(DeviceController):
 
     @state.setter
     @DeviceController.simPropertySetter
-    def state(self,value):
+    def state(self,value:CSMACA_State):
+        if (self._state == value):
+            return
+        self._log.append((self.Sim.time,self.name,value.name))
         self._state = value
 
 
@@ -202,6 +207,7 @@ class CSMACA_DeviceController(DeviceController):
         super().Reset()
         self._sentData = []
         self._receivedData = []
+        self._log = []
 
 
 
@@ -285,13 +291,13 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
         pass
 
     def RecieveComplete(self):
-        self.receivedData.append(self._receivingData.ToReceiveData())
-        self.sentData.append(self._holdData.ToSendData())
+        self.receivedData.append(self._receivingData)
+        self.sentData.append(self._holdData)
 
         target : CSMACA_DeviceController = self._receivingData.target
 
-        target.receivedData.append(self._holdData.ToReceiveData())
-        target.sentData.append(self._receivingData.ToSendData())
+        target.receivedData.append(self._holdData)
+        target.sentData.append(self._receivingData)
 
         self._holdData = TransData.Null
         self._receivingData = TransData.Null
@@ -469,10 +475,10 @@ if __name__ == '__main__':
     Simulator.Instance.devices.append(ap) # シミュレーターに追加
 
     # 端末の作成
-    duration = 100000 # シミュレーション時間(us)
-    count = 2 # 試行回数
+    duration = 200000 # シミュレーション時間(us)
+    count = 1 # 試行回数
     num = 70
-    s = 0
+    s = 5
 
     for i in range(num):
         sta = CSMACA_STA_Controller()
@@ -505,6 +511,7 @@ if __name__ == '__main__':
         UDP = []
         Success = []
         Lap = []
+        Step = {}
         for n in range(count):
             Simulator.Instance.SetRandomSeed(s)
             #s+=1
@@ -514,16 +521,25 @@ if __name__ == '__main__':
             success = 0
             ip = 0
             udp = 0
+            log = {}
             for dev in Simulator.Instance.devices:
                 if (isinstance(dev,CSMACA_DeviceController)):
-                    ip += sum([data.get('IP',0) for data in dev.sentData])
-                    udp += sum([data.get('UDP',0) for data in dev.sentData])
+                    ip  += sum([data.data.get('IP',0) for data in dev.sentData])
+                    udp += sum([data.data.get('UDP',0) for data in dev.sentData])
                     success += len(dev.sentData)
-
+                    log[dev.name] = dev._log
+                    for data in dev.sentData:
+                        Step.setdefault(str(max(1,data.stratTime)//10000),0)
+                        Step[str(max(1,data.stratTime)//10000)] += 1
             Lap.append(lap)
             IP.append(ip)
             UDP.append(udp)
             Success.append(success)
+
+            path = os.path.join(os.path.dirname(__file__),'result',f'log_{n}_{rate}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+            with open(path,'w',encoding='utf-8') as f:
+                json.dump(log,f,indent=4,ensure_ascii=False)
+
 
         all_result[rate] = {
             'lap_time' : sum(Lap)/count,
@@ -544,5 +560,9 @@ if __name__ == '__main__':
     path = os.path.join(os.path.dirname(__file__),'result',f'test{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
     with open(path,'w',encoding='utf-8') as f:
         json.dump(d,f,indent=4,ensure_ascii=False)
+
+    path = os.path.join(os.path.dirname(__file__),'result',f'step{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+    with open(path,'w',encoding='utf-8') as f:
+        json.dump(Step,f,indent=4,ensure_ascii=False)
 
 
