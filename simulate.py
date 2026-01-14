@@ -341,7 +341,7 @@ if __name__ == "__main__":
     for i in range(70):
         users.append(User(i)) # ユーザーをリストにする
 
-    result = sim.Simulate(users, 1) # シミュレーションを実行
+    result = sim.Simulate(users, 0.1,0) # シミュレーションを実行
 
     print(f'Throughput : {result}Mbps')
 
