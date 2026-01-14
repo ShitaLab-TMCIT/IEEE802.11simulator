@@ -2,21 +2,28 @@ import random
 import typing
 import enum
 import math
-import copy
 import time
-import numpy
 
-Rand = random.Random(0)
+
 
 class IEEE_Standard(enum.Enum) :
     """
     IEEE 802.11の規格を表す列挙型
     """
+
     a = enum.auto(),
     b = enum.auto(),
     g = enum.auto()
 
-__IEEE_ParamType = typing.TypedDict('IEEE_Param', {"SLOT_TIME": int, "SIFS": int, "DIFS": int})
+
+__IEEE_ParamType = typing.TypedDict(
+    'IEEE_Param',
+    {
+        "SLOT_TIME": int,
+        "SIFS": int,
+        "DIFS": int
+    }
+)
 
 TRANS_MODE_DATA : typing.Dict[IEEE_Standard,__IEEE_ParamType] = {
     IEEE_Standard.a: {
@@ -41,51 +48,58 @@ TRANS_MODE_DATA : typing.Dict[IEEE_Standard,__IEEE_ParamType] = {
     }
 }
 
+
 class TrafficLevel(enum.Enum):
     """
     トラフィックレベルを表す列挙型
     """
+
     IP = enum.auto(),
     UDP = enum.auto(),
     TCP = enum.auto(),
 
 
 class User:
-
-
-
-
-
-    """
+    '''
     各ユーザーの送信状態を管理するクラス
-    """
-    cw_max : int = 1023
-    cw_list : typing.List[int]
+    '''
 
-    id : int
-    """ ユーザーのID """
-
-    num_re_trans : int
-    """ 再送回数 """
-
-    slots : int
-    """ スロット生成 """
-
-    num_transmitted : int
-    """ 何回送信したか """
-
-    data_transmitted : int
-    """ 送信したデータ量 """
+    _Rand : random.Random = None
+    ''' 乱数生成器 '''
 
 
-    def __init__(self, id : int, n : int = 0, seed = None):
-        """
+    id : int = 0
+    ''' ユーザーのID '''
+
+
+    cw_max   : int = 1023
+    '''CWの最大値'''
+
+    cw_list  : list[int] = []
+    '''cw_maxのリスト'''
+
+
+    re_trans : int = 0
+    ''' 再送回数 '''
+
+    slot     : int = 0
+    ''' スロット生成 '''
+
+
+    num_transmitted  : int = 0
+    ''' 送信した回数 '''
+
+    data_transmitted : int = 0
+    ''' 送信したデータ量 '''
+
+
+
+    def __init__(self, id : int):
+        '''
         Userクラスのコンストラクタ
         Args:
             id (int): ユーザーのID
-            n (int): 再送回数。デフォルトは0。
-            seed: 乱数生成のためのシード値（未使用）
-        """
+        '''
 
         self.cw_list = []
         i = 0
@@ -93,37 +107,35 @@ class User:
             self.cw_list.append(2**(4+i)-1)
             i+=1
 
-        # ID
         self.id = id
-        # 再送回数
-        self.num_re_trans : int = n
-        # スロット生成
-        self.slots : int = 0
-        # 何回送信したか
+        self.re_trans : int = 0
+        self.slot : int = 0
         self.num_transmitted : int = 0
-        # 送信したデータ量
         self.data_transmitted : int = 0
 
     def reset(self):
-        self.num_re_trans = 0
-        self.slots = 0
+        self.re_trans = 0
+        self.slot = 0
         self.num_transmitted = 0
         self.data_transmitted = 0
 
     # スロット生成
     def calc_slots(self) -> int :
-        return Rand.randint(0,self.cw_list[self.num_re_trans])
+        return self._Rand.randint(0,self.cw_list[self.re_trans])
 
     # 再送処理
     def re_transmit(self):
-        self.num_re_trans = min(self.num_re_trans+1, 6)
-        self.slots = Rand.randint(0,self.cw_list[self.num_re_trans])
+        self.re_trans = min(self.re_trans+1, 6)
+        self.slot = self.calc_slots()
 
     # スロットリセット
     def reset_slots(self):
-        self.num_re_trans = 0
-        self.slots = Rand.randint(0,self.cw_list[self.num_re_trans])
+        self.re_trans = 0
+        self.slot = self.calc_slots()
 
+
+    def set_rand(self,rand:random.Random):
+        self._Rand = rand
 
 
 class Simulator :
@@ -163,17 +175,19 @@ class Simulator :
 
     __SlotTime : float = 0
 
+    _Rand : random.Random
 
 
-    def __init__(self, mode : IEEE_Standard):
+
+    def __init__(self):
         """
         シミュレーターのコンストラクタ
         Args:
             mode (IEEE_Standard): IEEE 802.11の規格
         """
-        self.mode = mode
+        self._Rand = random.Random()
 
-    def calc_cw_time(self, slots : int) -> float:
+    def _calc_cw_time(self, slots : int) -> float:
         return slots * self.__SlotTime
 
 
@@ -240,16 +254,24 @@ Simulator Config
 -Total Frame Length   : {self.__Total_Frame_length} microseconds
 """)
 
-
-    def Simulate(self, users : typing.List[User], duration: int, seed = None) -> typing.Dict[int, User]:
+    def Simulate(self, users : list[User], duration: int, seed = None) -> float:
         """
         シミュレーションを実行する
         Args:
-            users (typing.List[User]): ユーザーのリスト
-            seed: 乱数生成のためのシード値（未使用）
+            users (list[User]): ユーザーのリスト
+            duration (int): シミュレーション時間（秒）
+            seed: 乱数生成のためのシード値
         Returns:
-            typing.Dict[int, User]: ユーザーのIDをキーとするユーザーの状態を格納した辞書
+            dict[int, User]: ユーザーのIDをキーとするユーザーの状態を格納した辞書
         """
+        if seed is not None:
+            self._Rand.seed(seed)
+
+        for user in users:
+            user.reset()
+            user.set_rand(self._Rand)
+
+
         success = 0
 
         duration *= 10**6  # マイクロ秒単位に変換
@@ -259,21 +281,21 @@ Simulator Config
 
         while current_time < duration:
             #print(f"Current Time: {current_time} microseconds")
-            users.sort(key=lambda x: x.slots)  # スロットの小さい順にソート
-            min_slots = users[0].slots
+            users.sort(key=lambda x: x.slot)  # スロットの小さい順にソート
+            min_slots = users[0].slot
 
-            cw_time = self.calc_cw_time(min_slots)
+            cw_time = self._calc_cw_time(min_slots)
 
-            if users[1].slots == min_slots:
+            if users[1].slot == min_slots:
                 # 衝突が発生した場合
                 current_time += self.__Total_Frame_length + self.__Backoff_count*cw_time
                 if (current_time < duration):
                     min_slots = min_slots
                     for user in users:
-                        if user.slots == min_slots:
+                        if user.slot == min_slots:
                             user.re_transmit()
                         else:
-                            user.slots -= min_slots
+                            user.slot -= min_slots
                 else:
                     break
             else:
@@ -288,84 +310,45 @@ Simulator Config
                     break
 
                 for user in users:
-                    user.slots -= min_slots
+                    user.slot -= min_slots
 
                 users[0].reset_slots()
 
-        print('success:',success)
-        return success,float(total_data_transmitted / duration)
+        #print('success:',success)
+        return float(total_data_transmitted / duration)
+
 
 if __name__ == "__main__":
-    # python main.pyで実行すると以下が実行される
-    n = 70
+    # サンプルコード
 
-    # Userのリスト(users)を作成シミュレータに渡す
-
-    all_result = {}
-    seed = 0
-
-    for num in [70]:
-        all_result[num] = {}
-
-        users = [User(i) for i in range(num)]
-        for rate in [24]:
-            all_result[num][rate] = []
-            simulator = Simulator(IEEE_Standard.a)
-
-            results = []
-            for i in range(10):
-                Rand.seed(seed)
-                start_time = time.time()
-                simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, rate)
-                all_result[num][rate].append(str(simulator.__dict__))
-                su, ip_data = simulator.Simulate(users, 0.1, seed=42)
-                results.append(ip_data)
-
-                Rand.seed(seed)
-                simulator.SetConfig(IEEE_Standard.a, TrafficLevel.UDP, rate)
-                su0, udp_data = simulator.Simulate(users, 0.1, seed=42)
-                end_time = time.time()
-                seed += 0
-
-                # all_result[num][rate].append( {
-                #     'lap_time' : (end_time-start_time)/2,
-                #     'IP' : ip_data,
-                #     'UDP' : udp_data,
-                #     'success' : su
-                # })
-            print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
+    # シミュレーション条件
+    # *デバイス数             : 70台
+    # *シミュレーション時間    : 1秒(1000000us)
+    # *伝送レート             : 24Mbps
+    # *IEEE802.11バージョン   : IEEE802.11a
+    # *パケット               : IPレベル
 
 
-    # for num in [2,5,10,20,30,40,50,60,70,80,90,100]:
-    #     all_result[num] = {}
+    sim = Simulator() # シミュレーターのインスタンスを作成
+    sim.SetConfig(  # シミュレーション条件を設定
+        IEEE_Standard.a, # IEEE802.11バージョン
+        TrafficLevel.IP, # パケット
+        24               # 伝送レート
+    )
 
-    #     users = [User(i) for i in range(num)]
-    #     for rate in [6,9,12,18,24,36,48,54]:
-    #         all_result[num][rate] = []
-    #         simulator = Simulator(IEEE_Standard.a)
+    # デバイス設定
+    users = []
+    for i in range(70):
+        users.append(User(i)) # ユーザーをリストにする
 
-    #         results = []
-    #         for i in range(10):
-    #             Rand.seed(seed)
-    #             start_time = time.time()
-    #             simulator.SetConfig(IEEE_Standard.a, TrafficLevel.IP, rate)
-    #             su, ip_data = simulator.Simulate(users, 1, seed=42)
-    #             results.append(ip_data)
+    result = sim.Simulate(users, 1) # シミュレーションを実行
 
-    #             Rand.seed(seed)
-    #             simulator.SetConfig(IEEE_Standard.a, TrafficLevel.UDP, rate)
-    #             su, udp_data = simulator.Simulate(users, 1, seed=42)
-    #             end_time = time.time()
-    #             seed += 1
+    print(f'Throughput : {result}Mbps')
 
-    #             all_result[num][rate].append( {
-    #                 'lap_time' : (end_time-start_time)/2,
-    #                 'IP' : ip_data,
-    #                 'UDP' : udp_data,
-    #                 'success' : su
-    #             })
-    #         print(f"Simulation took {end_time - start_time:.2f} seconds\nresult : {sum(results) / len(results)} Mbps")
 
-    import os,json,datetime
-    with open(os.path.join(os.path.dirname(__file__),f'result{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.json'),'w') as f:
-        json.dump(all_result,f,indent=4)
+
+
+
+
+
+
