@@ -15,14 +15,13 @@ import TransData,SimCore,DeviceController
 # class
 
 class PhysicalManager:
-    Instance : 'PhysicalManager' = None
 
     @property
     def Sim(self) -> 'sim.Simulator':
         return sim.Simulator.Instance
 
     def __init__(self):
-        PhysicalManager.Instance = self
+        pass
 
     def CulcDistance(self,dev1:'devc.DeviceController',dev2:'devc.DeviceController') -> float:
         vec1 = dev1.position
@@ -33,27 +32,4 @@ class PhysicalManager:
             (vec2[2] - vec1[2])**2
         )
 
-    def Sense(self,dev:'devc.DeviceController') -> 'trad.TransData':
-        #print(f'\033[1;33mPhysicalManager.Sense : {dev.name}\033[0m')
-        l : typing.List[trad.TransData] = [i.transData for i in self.Sim.devices if i.transData is not trad.TransData.Null]
-        # for i in self.Sim.devices:
-        #     if (i is dev):
-        #         continue
-        #     elif (i.transData is trad.TransData.Null):
-        #         continue
-        #     else:
-        #         l.append(i.transData)
-
-        if (len(l)>1):
-            return TransData.TransData(
-                DeviceController.DeviceController.Null,
-                DeviceController.DeviceController.Null,
-                0,0,100,
-                {}
-            )
-        elif (len(l)==1):
-            data = l[0].copy()
-            data._power = 100
-            return data
-        else:
-            return TransData.TransData.Null
+    

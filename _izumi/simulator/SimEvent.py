@@ -67,7 +67,7 @@ class SimEvent:
         else:
             return []
 
-class ResetEvent(SimEvent):
+class InitEvent(SimEvent):
     def __init__(self, time, author):
         super().__init__(time, author)
         self._target = EventTarget.BroadCast
@@ -84,3 +84,8 @@ class PhysicalEvent(SimEvent):
         super().__init__(time, author)
         self._target = EventTarget.BroadCast
     pass
+
+class ReserveEvent(SimEvent):
+    def __init__(self, time, author):
+        super().__init__(time, author)
+        self._target = EventTarget.Author

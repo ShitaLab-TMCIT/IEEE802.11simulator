@@ -50,6 +50,7 @@ class TransRate(enum.IntEnum):
         return self.value*4
     # +85
 
+
 class IEEE802dot11Version(enum.Enum):
     a = enum.auto()
     b = enum.auto()
@@ -140,22 +141,6 @@ class IEEE802dot11TransData(TransData):
         )
 
 
-class CSMACA_Event(SimEvent):
-    pass
-
-class CSMACA_SlotEvent(CSMACA_Event):
-    slot : int = 0
-
-    def __init__(self, time: int, author: DeviceController, slot:int):
-        super().__init__(time, author)
-        self.slot = slot
-    pass
-class CSMACA_EndDIFS_Event(CSMACA_Event): pass
-class CSMACA_SendStartEvent(CSMACA_Event): pass
-class CSMACA_SendCompleteEvent(CSMACA_Event): pass
-class CSMACA_ReceiveCompleteEvent(CSMACA_Event): pass
-
-
 class CSMACA_State(enum.Enum):
     Idle = enum.auto()
     WaitBackoff = enum.auto()
@@ -166,20 +151,60 @@ class CSMACA_State(enum.Enum):
     Busy = enum.auto()
 
 
+class CSMACA_Event(ReserveEvent):
+    pass
+
+class CSMACA_SlotEvent(CSMACA_Event):
+    slot : int = 0
+
+    def __init__(self, time: int, author: DeviceController, slot:int):
+        super().__init__(time, author)
+        self.slot = slot
+    pass
+class CSMACA_EndDIFS_Event(CSMACA_Event): ...
+class CSMACA_SendStartEvent(CSMACA_Event): ...
+class CSMACA_SendCompleteEvent(CSMACA_Event): ...
+class CSMACA_ReceiveCompleteEvent(CSMACA_Event): ...
+
+
+class CSMACA_PhysicalManager(PhysicalManager):
+    def __init__(self):
+        super().__init__()
+    
+    def Sense(self,dev:DeviceController) -> TransData:
+        l : list[TransData] = [i.transData for i in self.Sim.devices if i.transData is not TransData.Null]
+        
+        if (len(l)>1):
+            return TransData(
+                DeviceController.Null,
+                DeviceController.Null,
+                0,0,100,
+                {}
+            )
+        elif (len(l)==1):
+            data = l[0].copy()
+            data._power = 100
+            return data
+        else:
+            return TransData.Null
 
 
 
 
 class CSMACA_DeviceController(DeviceController):
-    def __init__(self):
-        super().__init__()
+    _log = []
 
+    def __init__(self,name:str='',position:Vector3=None):
+        super().__init__(name,position)
+        self._physical : CSMACA_PhysicalManager = CSMACA_PhysicalManager()
         self._state : CSMACA_State = CSMACA_State.Idle
         self._rate : TransRate = TransRate.r6Mbps
-        self._sentData : typing.List[TransData] = []
-        self._receivedData : typing.List[TransData] = []
-
-    _log = []
+        self._sentData : list[TransData] = []
+        self._receivedData : list[TransData] = []
+    
+    @property
+    def Phy(self) -> CSMACA_PhysicalManager:
+        return self._physical
 
     @property
     def version(self) -> IEEE802dot11Version:
@@ -226,8 +251,8 @@ class CSMACA_DeviceController(DeviceController):
 
 
 class CSMACA_STA_Controller(CSMACA_DeviceController):
-    def __init__(self):
-        super().__init__()
+    def __init__(self,name:str='',position:Vector3=None):
+        super().__init__(name,position)
         self._slot : int = 0
         self._resend : int = 0
         self._target : 'CSMACA_AP_Controller' = None
@@ -373,16 +398,10 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
                     self.state = CSMACA_State.WaitDIFS
                     self.nextEvent = CSMACA_EndDIFS_Event(self.Sim.time+self.version.DIFS,self)
 
-
-
-
-
-
-
 class CSMACA_AP_Controller(CSMACA_DeviceController):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,name:str='',position:Vector3=None):
+        super().__init__(name,position)
         self._target : CSMACA_STA_Controller = None
 
         self._receivingData : IEEE802dot11TransData = TransData.Null

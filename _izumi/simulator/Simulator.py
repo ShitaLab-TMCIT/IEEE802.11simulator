@@ -18,18 +18,19 @@ class Simulator:
     代入,変更禁止
     """
 
-    SimDev : 'devc.DeviceController' = None
+    SimDev   : 'devc.DeviceController' = None
     """
     イベントの親がシミュレーターであることを明示するデバイス型.
     代入,変更禁止
     """
 
-    Rand : random = None
+    Rand : random.Random = None
 
-    _devices : typing.List['devc.DeviceController'] = []
-    _eventQueue : typing.List['sime.SimEvent'] = []
     _time : int = 0
-    _simProperties : typing.Dict[str,typing.Any] = {}
+    _devices : list['devc.DeviceController'] = []
+    _eventQueue : list['sime.SimEvent'] = []
+    _isPhysicFlag : bool = False
+    _simProperties : dict[str,typing.Any] = {}
 
 
     def __init__(self):
@@ -37,14 +38,14 @@ class Simulator:
         Simulator.SimDev = devc.DeviceController()
         Simulator.Rand = random.Random()
 
-        self._devices : typing.List[devc.DeviceController] = []
-        self._eventQueue : typing.List[sime.SimEvent] = []
-        self._time : int = 0
-        self._simProperties : typing.Dict[str,typing.Any] = {}
+        self._time = 0
+        self._devices  = []
+        self._eventQueue = []
+        self._simProperties = {}
 
 
     @property
-    def devices(self) -> typing.List['devc.DeviceController']:
+    def devices(self) -> list['devc.DeviceController']:
         """
         シミュレーション対象のデバイス配列
 
@@ -54,7 +55,7 @@ class Simulator:
         return self._devices
 
     @property
-    def eventQueue(self) -> typing.List['sime.SimEvent']:
+    def eventQueue(self) -> list['sime.SimEvent']:
         """
         即時発火させるイベントのキュー
 
@@ -74,7 +75,7 @@ class Simulator:
         return self._time
 
     @property
-    def simProperties(self) -> typing.Dict[str,typing.Any]:
+    def simProperties(self) -> dict[str,typing.Any]:
         """
         シミュレーション共通のパラメーターを格納する辞書
 
@@ -84,7 +85,7 @@ class Simulator:
         return self._simProperties
 
 
-    def Simulate(self,duration:int) -> None:
+    def Simulate(self,duration:int,stack_count:int=100) -> bool:
         """
         シミュレーションを実行する関数
 
@@ -93,12 +94,21 @@ class Simulator:
         """
 
         self._time = 0
-        self._eventQueue.clear()
-        self._TriggerEvent(sime.ResetEvent(self.time,self.SimDev))
+        self._isPhysicFlag = False
+        
+        self._TriggerEvent(sime.InitEvent(self.time,self.SimDev))
         self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
-        while (self._time < duration):
-            self._SimulateOne()
+        try:
+            while (self._time < duration):
+                self._SimulateOne(stack_count)
+        except:
+            return False
+        else:
+            return True
+
+    def TriggerPhysic(self) -> None:
+        self._isPhysicFlag = True
 
 
     def SetRandomSeed(self,seed:int) -> None:
@@ -110,6 +120,7 @@ class Simulator:
         """
 
         self.Rand.seed(seed)
+
 
     def SetProperty(self,key:str,value:typing.Any) -> None:
         """
@@ -138,13 +149,12 @@ class Simulator:
         return self._simProperties.get(key,default)
 
 
-    def _TriggerEvent (self,event:'sime.SimEvent') -> None:
-        #print(self.time,event.author.name,event,event.target)
+    def _TriggerEvent (self,event:'sime.SimEvent',stack_count:int=100) -> None:
         for device in event.get_target():
             device.Event(event,device)
         
 
-    def _SimulateOne (self) -> None:
+    def _SimulateOne (self,stack_count:int) -> None:
         t = self.time
 
         nextEvent = (sorted(
@@ -153,32 +163,29 @@ class Simulator:
             )+[sime.UpdateEvent(self.time,self.SimDev)])
         self._time = max(nextEvent[0].time,self.time)
 
-        #print('nextEvent')
         for i in nextEvent[:-1]:
             if (self._time >= i.time):
                 self._TriggerEvent(i)
-                # update = sime.UpdateEvent(self.time,self.SimDev)
-                # update.target = sime.EventTarget.Custom
-                # update.targets = i.get_target()
-                # self._TriggerEvent(update)
-                #self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
             else:
                 break
-        
-        #print('nextEvent_finish')
         self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
-        while (len(self._eventQueue)>0):
-            #print('queue')
-            event = self._eventQueue.pop(0)
-            self._eventQueue.clear()
+        count = 0
+        while (self._isPhysicFlag):
+            self._isPhysicFlag = False
+
+            event = sime.PhysicalEvent(self.time,self.SimDev)
+            
             self._TriggerEvent(event)
             self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
 
+            count += 1
+            if (count > stack_count):
+                raise Exception
+
 
         if (t == self.time):
-            pass
-            #raise Exception
+            raise Exception
 
 
 # if __name__ == '__main__':
