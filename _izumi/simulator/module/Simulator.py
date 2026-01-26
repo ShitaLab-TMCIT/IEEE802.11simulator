@@ -1,10 +1,7 @@
 import typing,dataclasses,json,os,random,time
 
-import SimCore as simc
-import SimEvent as sime
-import TransData as trad
-import PhysicalManager as phym
-import DeviceController as devc
+from .SimEvent import SimEvent,InitEvent,UpdateEvent,PhysicalEvent
+from .DeviceController import DeviceController
 
 
 class Simulator:
@@ -18,7 +15,7 @@ class Simulator:
     代入,変更禁止
     """
 
-    SimDev   : 'devc.DeviceController' = None
+    SimDev   : 'DeviceController' = None
     """
     イベントの親がシミュレーターであることを明示するデバイス型.
     代入,変更禁止
@@ -27,15 +24,15 @@ class Simulator:
     Rand : random.Random = None
 
     _time : int = 0
-    _devices : list['devc.DeviceController'] = []
-    _eventQueue : list['sime.SimEvent'] = []
+    _devices : list['DeviceController'] = []
+    _eventQueue : list['SimEvent'] = []
     _isPhysicFlag : bool = False
     _simProperties : dict[str,typing.Any] = {}
 
 
     def __init__(self):
         Simulator.Instance = self
-        Simulator.SimDev = devc.DeviceController()
+        Simulator.SimDev = DeviceController()
         Simulator.Rand = random.Random()
 
         self._time = 0
@@ -45,7 +42,7 @@ class Simulator:
 
 
     @property
-    def devices(self) -> list['devc.DeviceController']:
+    def devices(self) -> list['DeviceController']:
         """
         シミュレーション対象のデバイス配列
 
@@ -55,7 +52,7 @@ class Simulator:
         return self._devices
 
     @property
-    def eventQueue(self) -> list['sime.SimEvent']:
+    def eventQueue(self) -> list['SimEvent']:
         """
         即時発火させるイベントのキュー
 
@@ -95,15 +92,15 @@ class Simulator:
 
         self._time = 0
         self._isPhysicFlag = False
-        
-        self._TriggerEvent(sime.InitEvent(self.time,self.SimDev))
-        self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
+
+        self._TriggerEvent(InitEvent(self.time,self.SimDev))
+        self._TriggerEvent(UpdateEvent(self.time,self.SimDev))
 
         try:
             while (self._time < duration):
                 self._SimulateOne(stack_count)
-        except:
-            return False
+        except Exception as e:
+            return e
         else:
             return True
 
@@ -149,18 +146,18 @@ class Simulator:
         return self._simProperties.get(key,default)
 
 
-    def _TriggerEvent (self,event:'sime.SimEvent',stack_count:int=100) -> None:
+    def _TriggerEvent (self,event:'SimEvent') -> None:
         for device in event.get_target():
             device.Event(event,device)
-        
+
 
     def _SimulateOne (self,stack_count:int) -> None:
         t = self.time
 
         nextEvent = (sorted(
-            [dev.nextEvent for dev in self._devices if dev.nextEvent.time >= 0],
+            [dev.nextEvent for dev in self._devices if dev.nextEvent.time > 0],
             key = lambda e: e.time
-            )+[sime.UpdateEvent(self.time,self.SimDev)])
+            )+[UpdateEvent(self.time,self.SimDev)])
         self._time = max(nextEvent[0].time,self.time)
 
         for i in nextEvent[:-1]:
@@ -168,24 +165,24 @@ class Simulator:
                 self._TriggerEvent(i)
             else:
                 break
-        self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
+        self._TriggerEvent(UpdateEvent(self.time,self.SimDev))
 
         count = 0
         while (self._isPhysicFlag):
             self._isPhysicFlag = False
 
-            event = sime.PhysicalEvent(self.time,self.SimDev)
-            
+            event = PhysicalEvent(self.time,self.SimDev)
+
             self._TriggerEvent(event)
-            self._TriggerEvent(sime.UpdateEvent(self.time,self.SimDev))
+            self._TriggerEvent(UpdateEvent(self.time,self.SimDev))
 
             count += 1
             if (count > stack_count):
-                raise Exception
+                raise Exception('カウント超過')
 
 
         if (t == self.time):
-            raise Exception
+            raise Exception('時間停止')
 
 
 # if __name__ == '__main__':

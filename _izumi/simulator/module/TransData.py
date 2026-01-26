@@ -1,7 +1,8 @@
 import typing
-import SimCore
-import DeviceController as devc
 
+
+if typing.TYPE_CHECKING:
+    from .DeviceController import DeviceController
 
 
 
@@ -15,11 +16,11 @@ class TransData:
 
 
     @property
-    def author(self) -> 'devc.DeviceController':
+    def author(self) -> 'DeviceController':
         return self._author
 
     @property
-    def target(self) -> 'devc.DeviceController':
+    def target(self) -> 'DeviceController':
         return self._target
 
 
@@ -49,8 +50,8 @@ class TransData:
     @typing.overload
     def __init__(
             self,
-            author:'devc.DeviceController',
-            target:'devc.DeviceController',
+            author:'DeviceController',
+            target:'DeviceController',
             startTime:int,
             endTime:int,
             power:float,
@@ -58,36 +59,26 @@ class TransData:
             ):...
 
     def __init__(self,
-            author:'devc.DeviceController' = None,
-            target:'devc.DeviceController' = None,
+            author:'DeviceController' = None,
+            target:'DeviceController' = None,
             startTime:int = 0,
             endTime:int = 0,
             power:float = 0,
             data:typing.Dict[str,typing.Any] = {}
             ):
-        if (self.Null is None):
-            self._transID   : int = -1
-            self._author    : devc.DeviceController = devc.DeviceController.Null
-            self._target    : devc.DeviceController = devc.DeviceController.Null
-            self._startTime : int = 0
-            self._endTime   : int = 0
-            self._power     : float = 0
-            self._data      : typing.Dict[str,typing.Any] = {}
-            TransData.Null = self
-        else:
-            self._transID   : int = TransData.__transID
-            self._author    : devc.DeviceController = author
-            self._target    : devc.DeviceController = target
-            self._startTime : int = startTime
-            self._endTime   : int = endTime
-            self._power     : float = power
-            self._data      : typing.Dict[str,typing.Any] = data
-            TransData.__transID += 1
+        self._transID   : int = TransData.__transID
+        self._author    : DeviceController = author
+        self._target    : DeviceController = target
+        self._startTime : int = startTime
+        self._endTime   : int = endTime
+        self._power     : float = power
+        self._data      : typing.Dict[str,typing.Any] = data
+        TransData.__transID += 1
 
 
     def ToSendData(self) -> typing.Dict[str,typing.Any]:
         return {
-            'device' : self._target.name,
+            'device' : self._target.ID,
             'length' : self._data.get('length',0),
             'IP' : self._data.get('IP',0),
             'TCP' : self._data.get('TCP',0),
@@ -96,13 +87,13 @@ class TransData:
 
     def ToReceiveData(self) -> typing.Dict[str,typing.Any]:
         return {
-            'device' : self._author.name,
+            'device' : self._author.ID,
             'length' : self._data.get('length',0),
             'IP' : self._data.get('IP',0),
             'TCP' : self._data.get('TCP',0),
             'UDP' : self._data.get('UDP',0)
         }
-    
+
     def copy(self) -> 'TransData':
         return TransData(
             self._author,

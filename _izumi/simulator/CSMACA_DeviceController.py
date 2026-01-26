@@ -1,6 +1,6 @@
-import typing,random,math,enum
+import typing,random,math,enum,time
 
-from pack import *
+from module import *
 
 DataLength = typing.TypedDict('DataLength',{
     'device':DeviceController,
@@ -127,7 +127,7 @@ class IEEE802dot11TransData(TransData):
         super().__init__(author,target,startTime,endTime,power,data)
         self._frameType = frameType
         self._rate = rate
-    
+
     def copy(self) -> 'IEEE802dot11TransData':
         return IEEE802dot11TransData(
             self._author,
@@ -170,10 +170,12 @@ class CSMACA_ReceiveCompleteEvent(CSMACA_Event): ...
 class CSMACA_PhysicalManager(PhysicalManager):
     def __init__(self):
         super().__init__()
-    
-    def Sense(self,dev:DeviceController) -> TransData:
-        l : list[TransData] = [i.transData for i in self.Sim.devices if i.transData is not TransData.Null]
-        
+
+    @classmethod
+    def Sense(cls,dev:DeviceController) -> TransData:
+        Sim = Simulator.Instance
+        l : list[TransData] = [i.transData for i in Sim.devices if i.transData is not TransData.Null]
+
         if (len(l)>1):
             return TransData(
                 DeviceController.Null,
@@ -196,12 +198,12 @@ class CSMACA_DeviceController(DeviceController):
 
     def __init__(self,name:str='',position:Vector3=None):
         super().__init__(name,position)
-        self._physical : CSMACA_PhysicalManager = CSMACA_PhysicalManager()
+        self._physical : CSMACA_PhysicalManager = CSMACA_PhysicalManager
         self._state : CSMACA_State = CSMACA_State.Idle
         self._rate : TransRate = TransRate.r6Mbps
         self._sentData : list[TransData] = []
         self._receivedData : list[TransData] = []
-    
+
     @property
     def Phy(self) -> CSMACA_PhysicalManager:
         return self._physical
@@ -241,8 +243,8 @@ class CSMACA_DeviceController(DeviceController):
         self._state = value
 
 
-    def Reset(self):
-        super().Reset()
+    def Init(self):
+        super().Init()
         self._sentData = []
         self._receivedData = []
         self._log = []
@@ -282,7 +284,7 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
     def Event(self, event:SimEvent, obj:DeviceController):
         super().Event(event,obj)
 
-        if (obj.name == self.name):
+        if (obj.ID == self.ID):
             if (type(event) is CSMACA_SlotEvent):
                 if (event.slot > 0):
                     #
@@ -357,12 +359,13 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
         #self.BookEvent(PhysicalEvent)
 
 
-    def Reset(self):
-        super().Reset()
+    def Init(self):
+        super().Init()
         self.state = CSMACA_State.WaitBackoff
         self.ResetResendCount()
         self.generateSlot()
         self.nextEvent = CSMACA_SlotEvent(self.Sim.time+self.version.slotTime,self,self._slot-1)
+        print(self.nextEvent.time)
 
 
 
@@ -374,7 +377,7 @@ class CSMACA_STA_Controller(CSMACA_DeviceController):
 
             if (self.state in [CSMACA_State.WaitBackoff,CSMACA_State.WaitDIFS]):
                 if (trans.power > 0):
-                    if (type(trans) is IEEE802dot11TransData and trans.target.name == self.name):
+                    if (type(trans) is IEEE802dot11TransData and trans.target.ID == self.ID):
                         self._receivingData = trans
                         self.state = CSMACA_State.Receiving
                         self.nextEvent = CSMACA_ReceiveCompleteEvent(trans.endTime,self)
@@ -410,7 +413,7 @@ class CSMACA_AP_Controller(CSMACA_DeviceController):
     def Event(self, event:SimEvent, obj:DeviceController):
         super().Event(event,obj)
 
-        if (obj.name == self.name):
+        if (obj.ID == self.ID):
             if   (type(event) is CSMACA_SendStartEvent):
                 self.SendStart()
             elif (type(event) is CSMACA_SendCompleteEvent):
@@ -463,7 +466,7 @@ class CSMACA_AP_Controller(CSMACA_DeviceController):
 
             if (trans.power > 0):
                 if (self.state is CSMACA_State.Idle):
-                    if (trans.target.name == self.name and trans.stratTime == self.Sim.time):
+                    if (trans.target.ID == self.ID and trans.stratTime == self.Sim.time):
                         self.state = CSMACA_State.Receiving
                         self._receivingData = trans
                         self.nextEvent = CSMACA_ReceiveCompleteEvent(trans.endTime,self)
@@ -491,8 +494,8 @@ class CSMACA_AP_Controller(CSMACA_DeviceController):
         #print('\033[1;31m',self.state,self.nextEvent,'\033[0m')
 
 
-    def Reset(self):
-        super().Reset()
+    def Init(self):
+        super().Init()
         self.state = CSMACA_State.Idle
         self._target = DeviceController.Null
         self._receivingData = TransData.Null
@@ -513,21 +516,21 @@ class Timer_Device(DeviceController):
 
     def __init__(self):
         super().__init__()
-    
+
 
     def Event(self, event, obj):
-        if (obj.name == self.name):
+        if (obj.ID == self.ID):
             if (type(event) is Timer_Event):
                 self.nextEvent = Timer_Event(self.Sim.time+self.step, self)
                 self.timer_event()
         return super().Event(event, obj)
-    
+
     def timer_event(self):
         success = 0
         for dev in self.Sim.devices:
             if (isinstance(dev,CSMACA_STA_Controller)):
                 success += len(dev.sentData)
-        
+
 
         print(f'--------------------')
         print(f'Sim-Time   : {self.Sim.time}')
@@ -538,14 +541,14 @@ class Timer_Device(DeviceController):
         self.latest = time.time()
         self.success = success
         pass
-    
+
 
     def Update(self):
         super().Update()
 
 
-    def Reset(self):
-        super().Reset()
+    def Init(self):
+        super().Init()
         self.nextEvent = Timer_Event(0,self)
         self.latest = time.time()
         self.success = 0
@@ -556,110 +559,110 @@ class Timer_Device(DeviceController):
 
 
 
-if __name__ == '__main__':
-    import os,json,datetime,time
+# if __name__ == '__main__':
+#     import os,json,datetime,time
 
-    Simulator.Instance.SetRandomSeed(0)
-    Simulator.Instance.SetProperty('version',IEEE802dot11Version.a)
+#     Simulator.Instance.SetRandomSeed(0)
+#     Simulator.Instance.SetProperty('version',IEEE802dot11Version.a)
 
-    Simulator.Instance.devices.append(Timer_Device())
+#     Simulator.Instance.devices.append(Timer_Device())
 
-    # 基地局の作成
-    ap = CSMACA_AP_Controller()
-    ap._rate = TransRate.r24Mbps
-    ap._name = 'AP'
-    Simulator.Instance.devices.append(ap) # シミュレーターに追加
+#     # 基地局の作成
+#     ap = CSMACA_AP_Controller()
+#     ap._rate = TransRate.r24Mbps
+#     ap._name = 'AP'
+#     Simulator.Instance.devices.append(ap) # シミュレーターに追加
 
-    # 端末の作成
-    duration = 1000000 # シミュレーション時間(us)
-    count = 1 # 試行回数
-    num = 70
-    s = 10
+#     # 端末の作成
+#     duration = 100000 # シミュレーション時間(us)
+#     count = 1 # 試行回数
+#     num = 70
+#     s = 10
 
-    for i in range(num):
-        sta = CSMACA_STA_Controller()
-        sta._target = ap # ターゲットをAPに
-        sta._rate = TransRate.r24Mbps
-        sta._name = f'STA{i}'
-        Simulator.Instance.devices.append(sta)
+#     for i in range(num):
+#         sta = CSMACA_STA_Controller()
+#         sta._target = ap # ターゲットをAPに
+#         sta._rate = TransRate.r24Mbps
+#         sta._name = f'STA{i}'
+#         Simulator.Instance.devices.append(sta)
 
-    L = []
-    L0 = 0
-    all_result = {}
+#     L = []
+#     L0 = 0
+#     all_result = {}
 
-    for rate in [
-            # TransRate.r6Mbps,
-            # TransRate.r9Mbps,
-            # TransRate.r12Mbps,
-            # TransRate.r18Mbps,
-            TransRate.r24Mbps,
-            # TransRate.r36Mbps,
-            # TransRate.r48Mbps,
-            # TransRate.r54Mbps
-            ]: # すべてのレートで試行
+#     for rate in [
+#             # TransRate.r6Mbps,
+#             # TransRate.r9Mbps,
+#             # TransRate.r12Mbps,
+#             # TransRate.r18Mbps,
+#             TransRate.r24Mbps,
+#             # TransRate.r36Mbps,
+#             # TransRate.r48Mbps,
+#             # TransRate.r54Mbps
+#             ]: # すべてのレートで試行
 
-        for dev in Simulator.Instance.devices:
-            if (isinstance(dev,CSMACA_DeviceController)):
-                dev._rate = rate
+#         for dev in Simulator.Instance.devices:
+#             if (isinstance(dev,CSMACA_DeviceController)):
+#                 dev._rate = rate
 
-        L = []
-        IP = []
-        UDP = []
-        Success = []
-        Lap = []
-        Step = {}
-        for n in range(count):
-            Simulator.Instance.SetRandomSeed(s)
-            #s+=1
-            start = time.time()
-            Simulator.Instance.Simulate(duration)
-            lap = time.time() - start
-            success = 0
-            ip = 0
-            udp = 0
-            log = {}
-            for dev in Simulator.Instance.devices:
-                if (isinstance(dev,CSMACA_DeviceController)):
-                    ip  += sum([data.data.get('IP',0) for data in dev.sentData])
-                    udp += sum([data.data.get('UDP',0) for data in dev.sentData])
-                    success += len(dev.sentData)
-                    log[dev.name] = dev._log
-                    if (isinstance(dev,CSMACA_STA_Controller)):
-                        for data in dev.sentData:
-                            Step.setdefault(str(max(1,data.stratTime)//10000),0)
-                            Step[str(max(1,data.stratTime)//10000)] += 1
-            Lap.append(lap)
-            IP.append(ip)
-            UDP.append(udp)
-            Success.append(success//2)
+#         L = []
+#         IP = []
+#         UDP = []
+#         Success = []
+#         Lap = []
+#         Step = {}
+#         for n in range(count):
+#             Simulator.Instance.SetRandomSeed(s)
+#             #s+=1
+#             start = time.time()
+#             print(Simulator.Instance.Simulate(duration))
+#             lap = time.time() - start
+#             success = 0
+#             ip = 0
+#             udp = 0
+#             log = {}
+#             for dev in Simulator.Instance.devices:
+#                 if (isinstance(dev,CSMACA_DeviceController)):
+#                     ip  += sum([data.data.get('IP',0) for data in dev.sentData])
+#                     udp += sum([data.data.get('UDP',0) for data in dev.sentData])
+#                     success += len(dev.sentData)
+#                     log[dev.name] = dev._log
+#                     if (isinstance(dev,CSMACA_STA_Controller)):
+#                         for data in dev.sentData:
+#                             Step.setdefault(str(max(1,data.stratTime)//10000),0)
+#                             Step[str(max(1,data.stratTime)//10000)] += 1
+#             Lap.append(lap)
+#             IP.append(ip)
+#             UDP.append(udp)
+#             Success.append(success//2)
 
-            path = os.path.join(os.path.dirname(__file__),'result',f'log_{n}_{rate}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
-            with open(path,'w',encoding='utf-8') as f:
-                json.dump(log,f,indent=4,ensure_ascii=False)
+#             path = os.path.join(os.path.dirname(__file__),'result',f'log_{n}_{rate}_{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+#             with open(path,'w',encoding='utf-8') as f:
+#                 json.dump(log,f,indent=4,ensure_ascii=False)
 
 
-        all_result[rate] = {
-            'lap_time' : sum(Lap)/count,
-            'IP' : (sum(IP)/count)/duration,
-            'UDP': (sum(UDP)/count)/duration,
-            'success':sum(Success)/count
-        }
-    print(all_result)
+#         all_result[rate] = {
+#             'lap_time' : sum(Lap)/count,
+#             'IP' : (sum(IP)/count)/duration,
+#             'UDP': (sum(UDP)/count)/duration,
+#             'success':sum(Success)/count
+#         }
+#     print(all_result)
 
-    d = {
-        'version': str(Simulator.Instance.GetProperty('version')),
-        'duration' : duration,
-        'device' : num,
-        'count' : count,
-        'result' : all_result
-    }
+#     d = {
+#         'version': str(Simulator.Instance.GetProperty('version')),
+#         'duration' : duration,
+#         'device' : num,
+#         'count' : count,
+#         'result' : all_result
+#     }
 
-    path = os.path.join(os.path.dirname(__file__),'result',f'test{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
-    with open(path,'w',encoding='utf-8') as f:
-        json.dump(d,f,indent=4,ensure_ascii=False)
+#     path = os.path.join(os.path.dirname(__file__),'result',f'test{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+#     with open(path,'w',encoding='utf-8') as f:
+#         json.dump(d,f,indent=4,ensure_ascii=False)
 
-    path = os.path.join(os.path.dirname(__file__),'result',f'step{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
-    with open(path,'w',encoding='utf-8') as f:
-        json.dump({k:Step[k] for k in sorted(Step.keys(), key=lambda x: int(x))},f,indent=4,ensure_ascii=False)
+#     path = os.path.join(os.path.dirname(__file__),'result',f'step{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json')
+#     with open(path,'w',encoding='utf-8') as f:
+#         json.dump({k:Step[k] for k in sorted(Step.keys(), key=lambda x: int(x))},f,indent=4,ensure_ascii=False)
 
 

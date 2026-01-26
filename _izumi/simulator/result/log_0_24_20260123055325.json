@@ -1,0 +1,493 @@
+{
+    "AP": [],
+    "STA0": [
+        [
+            0,
+            "STA0",
+            "WaitBackoff"
+        ]
+    ],
+    "STA1": [
+        [
+            0,
+            "STA1",
+            "WaitBackoff"
+        ]
+    ],
+    "STA2": [
+        [
+            0,
+            "STA2",
+            "WaitBackoff"
+        ]
+    ],
+    "STA3": [
+        [
+            0,
+            "STA3",
+            "WaitBackoff"
+        ]
+    ],
+    "STA4": [
+        [
+            0,
+            "STA4",
+            "WaitBackoff"
+        ]
+    ],
+    "STA5": [
+        [
+            0,
+            "STA5",
+            "WaitBackoff"
+        ]
+    ],
+    "STA6": [
+        [
+            0,
+            "STA6",
+            "WaitBackoff"
+        ]
+    ],
+    "STA7": [
+        [
+            0,
+            "STA7",
+            "WaitBackoff"
+        ]
+    ],
+    "STA8": [
+        [
+            0,
+            "STA8",
+            "WaitBackoff"
+        ]
+    ],
+    "STA9": [
+        [
+            0,
+            "STA9",
+            "WaitBackoff"
+        ]
+    ],
+    "STA10": [
+        [
+            0,
+            "STA10",
+            "WaitBackoff"
+        ]
+    ],
+    "STA11": [
+        [
+            0,
+            "STA11",
+            "WaitBackoff"
+        ]
+    ],
+    "STA12": [
+        [
+            0,
+            "STA12",
+            "WaitBackoff"
+        ]
+    ],
+    "STA13": [
+        [
+            0,
+            "STA13",
+            "WaitBackoff"
+        ]
+    ],
+    "STA14": [
+        [
+            0,
+            "STA14",
+            "WaitBackoff"
+        ]
+    ],
+    "STA15": [
+        [
+            0,
+            "STA15",
+            "WaitBackoff"
+        ]
+    ],
+    "STA16": [
+        [
+            0,
+            "STA16",
+            "WaitBackoff"
+        ]
+    ],
+    "STA17": [
+        [
+            0,
+            "STA17",
+            "WaitBackoff"
+        ]
+    ],
+    "STA18": [
+        [
+            0,
+            "STA18",
+            "WaitBackoff"
+        ]
+    ],
+    "STA19": [
+        [
+            0,
+            "STA19",
+            "WaitBackoff"
+        ]
+    ],
+    "STA20": [
+        [
+            0,
+            "STA20",
+            "WaitBackoff"
+        ]
+    ],
+    "STA21": [
+        [
+            0,
+            "STA21",
+            "WaitBackoff"
+        ]
+    ],
+    "STA22": [
+        [
+            0,
+            "STA22",
+            "WaitBackoff"
+        ]
+    ],
+    "STA23": [
+        [
+            0,
+            "STA23",
+            "WaitBackoff"
+        ]
+    ],
+    "STA24": [
+        [
+            0,
+            "STA24",
+            "WaitBackoff"
+        ]
+    ],
+    "STA25": [
+        [
+            0,
+            "STA25",
+            "WaitBackoff"
+        ]
+    ],
+    "STA26": [
+        [
+            0,
+            "STA26",
+            "WaitBackoff"
+        ]
+    ],
+    "STA27": [
+        [
+            0,
+            "STA27",
+            "WaitBackoff"
+        ]
+    ],
+    "STA28": [
+        [
+            0,
+            "STA28",
+            "WaitBackoff"
+        ]
+    ],
+    "STA29": [
+        [
+            0,
+            "STA29",
+            "WaitBackoff"
+        ]
+    ],
+    "STA30": [
+        [
+            0,
+            "STA30",
+            "WaitBackoff"
+        ]
+    ],
+    "STA31": [
+        [
+            0,
+            "STA31",
+            "WaitBackoff"
+        ]
+    ],
+    "STA32": [
+        [
+            0,
+            "STA32",
+            "WaitBackoff"
+        ]
+    ],
+    "STA33": [
+        [
+            0,
+            "STA33",
+            "WaitBackoff"
+        ]
+    ],
+    "STA34": [
+        [
+            0,
+            "STA34",
+            "WaitBackoff"
+        ]
+    ],
+    "STA35": [
+        [
+            0,
+            "STA35",
+            "WaitBackoff"
+        ]
+    ],
+    "STA36": [
+        [
+            0,
+            "STA36",
+            "WaitBackoff"
+        ]
+    ],
+    "STA37": [
+        [
+            0,
+            "STA37",
+            "WaitBackoff"
+        ]
+    ],
+    "STA38": [
+        [
+            0,
+            "STA38",
+            "WaitBackoff"
+        ]
+    ],
+    "STA39": [
+        [
+            0,
+            "STA39",
+            "WaitBackoff"
+        ]
+    ],
+    "STA40": [
+        [
+            0,
+            "STA40",
+            "WaitBackoff"
+        ]
+    ],
+    "STA41": [
+        [
+            0,
+            "STA41",
+            "WaitBackoff"
+        ]
+    ],
+    "STA42": [
+        [
+            0,
+            "STA42",
+            "WaitBackoff"
+        ]
+    ],
+    "STA43": [
+        [
+            0,
+            "STA43",
+            "WaitBackoff"
+        ]
+    ],
+    "STA44": [
+        [
+            0,
+            "STA44",
+            "WaitBackoff"
+        ]
+    ],
+    "STA45": [
+        [
+            0,
+            "STA45",
+            "WaitBackoff"
+        ]
+    ],
+    "STA46": [
+        [
+            0,
+            "STA46",
+            "WaitBackoff"
+        ]
+    ],
+    "STA47": [
+        [
+            0,
+            "STA47",
+            "WaitBackoff"
+        ]
+    ],
+    "STA48": [
+        [
+            0,
+            "STA48",
+            "WaitBackoff"
+        ]
+    ],
+    "STA49": [
+        [
+            0,
+            "STA49",
+            "WaitBackoff"
+        ]
+    ],
+    "STA50": [
+        [
+            0,
+            "STA50",
+            "WaitBackoff"
+        ]
+    ],
+    "STA51": [
+        [
+            0,
+            "STA51",
+            "WaitBackoff"
+        ]
+    ],
+    "STA52": [
+        [
+            0,
+            "STA52",
+            "WaitBackoff"
+        ]
+    ],
+    "STA53": [
+        [
+            0,
+            "STA53",
+            "WaitBackoff"
+        ]
+    ],
+    "STA54": [
+        [
+            0,
+            "STA54",
+            "WaitBackoff"
+        ]
+    ],
+    "STA55": [
+        [
+            0,
+            "STA55",
+            "WaitBackoff"
+        ]
+    ],
+    "STA56": [
+        [
+            0,
+            "STA56",
+            "WaitBackoff"
+        ]
+    ],
+    "STA57": [
+        [
+            0,
+            "STA57",
+            "WaitBackoff"
+        ]
+    ],
+    "STA58": [
+        [
+            0,
+            "STA58",
+            "WaitBackoff"
+        ]
+    ],
+    "STA59": [
+        [
+            0,
+            "STA59",
+            "WaitBackoff"
+        ]
+    ],
+    "STA60": [
+        [
+            0,
+            "STA60",
+            "WaitBackoff"
+        ]
+    ],
+    "STA61": [
+        [
+            0,
+            "STA61",
+            "WaitBackoff"
+        ]
+    ],
+    "STA62": [
+        [
+            0,
+            "STA62",
+            "WaitBackoff"
+        ]
+    ],
+    "STA63": [
+        [
+            0,
+            "STA63",
+            "WaitBackoff"
+        ]
+    ],
+    "STA64": [
+        [
+            0,
+            "STA64",
+            "WaitBackoff"
+        ]
+    ],
+    "STA65": [
+        [
+            0,
+            "STA65",
+            "WaitBackoff"
+        ]
+    ],
+    "STA66": [
+        [
+            0,
+            "STA66",
+            "WaitBackoff"
+        ]
+    ],
+    "STA67": [
+        [
+            0,
+            "STA67",
+            "WaitBackoff"
+        ]
+    ],
+    "STA68": [
+        [
+            0,
+            "STA68",
+            "WaitBackoff"
+        ]
+    ],
+    "STA69": [
+        [
+            0,
+            "STA69",
+            "WaitBackoff"
+        ]
+    ]
+}
