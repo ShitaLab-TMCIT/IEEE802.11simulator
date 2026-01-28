@@ -55,8 +55,7 @@ class SimEvent:
         if (self._target is EventTarget.Author):
             return [self._author]
         elif (self._target is EventTarget.BroadCast):
-            from .Simulator import Simulator
-            return Simulator.Instance.devices
+            return self.author.Sim.devices
         elif (self._target is EventTarget.Custom):
             return self._targets
         else:
@@ -66,19 +65,16 @@ class InitEvent(SimEvent):
     def __init__(self, time, author):
         super().__init__(time, author)
         self._target = EventTarget.BroadCast
-    pass
 
 class UpdateEvent(SimEvent):
     def __init__(self, time, author):
         super().__init__(time, author)
         self._target = EventTarget.BroadCast
-    pass
 
 class PhysicalEvent(SimEvent):
     def __init__(self, time, author):
         super().__init__(time, author)
         self._target = EventTarget.BroadCast
-    pass
 
 class ReserveEvent(SimEvent):
     def __init__(self, time, author):

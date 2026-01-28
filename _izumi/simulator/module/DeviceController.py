@@ -12,6 +12,7 @@ if typing.TYPE_CHECKING:
 class DeviceController:
     Null : 'DeviceController' = None
 
+    _simulator : 'Simulator' = None
     _physical  : 'PhysicalManager' = None
 
     _ID        : str = ''
@@ -39,16 +40,11 @@ class DeviceController:
 
     @property
     def Sim(self) -> 'Simulator':
-        from .Simulator import Simulator
-        return Simulator.Instance
+        return self._simulator
 
     @property
     def Phy(self) -> 'PhysicalManager':
         return self._physical
-
-    @Phy.setter
-    def Phy(self,value:'PhysicalManager'):
-        self._physical = value
 
     @property
     def ID(self) -> str:
@@ -86,26 +82,33 @@ class DeviceController:
         self._nextEvent = value
 
 
-    def Event(self, event:'SimEvent', obj:'DeviceController'):
-        if (type(event) is UpdateEvent):
-            self.Update()
-        elif (type(event) is InitEvent):
-            self.Init()
+    def TriggerPhysic(self) -> None:
+        self.Sim.TriggerPhysic()
+
+
+    def EventHandler(self, event:'SimEvent'):
+        if   (type(event) is InitEvent):
+            self.Init(event)
+        elif (type(event) is UpdateEvent):
+            self.Update(event)
         elif (type(event) is PhysicalEvent):
-            self.Physical()
+            self.Physical(event)
+        elif (isinstance(event,ReserveEvent)):
+            self.Event(event)
         pass
 
-    def Update(self):
+
+    def Init    (self, event:'SimEvent'):
+        self._simulator = event.author.Sim
+        self._nextEvent = SimEvent.Null
+        self._transData = TransData.Null
+
+    def Update  (self, event:'SimEvent'):
         while (len(self._queue)>0):
             self._queue.pop()()
 
-    def Init(self):
-        self._nextEvent = SimEvent.Null
-        self._transData = TransData.Null
+    def Physical(self, event:'SimEvent'):
         pass
 
-    def Physical(self):
+    def Event   (self, event:'SimEvent'):
         pass
-
-    def TriggerPhysic(self) -> None:
-        self.Sim.TriggerPhysic()

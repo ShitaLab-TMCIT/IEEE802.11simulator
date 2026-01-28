@@ -11,11 +11,6 @@ if typing.TYPE_CHECKING:
 
 class PhysicalManager:
 
-    @property
-    def Sim(self) -> 'Simulator':
-        from .Simulator import Simulator
-        return Simulator.Instance
-
     def __init__(self):
         pass
 
